@@ -1,0 +1,25 @@
+name: cron_form_field
+description: >-
+  This CronFormField package written in Dart for the Flutter.
+  You can edit cron expressions with this form field in an alert dialog.
+version: 0.0.1
+homepage: https://github.com/siposdani87/cron-form-field
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  test: any
+
+  dart_code_metrics: any
+  flutter_lints: any
+
+flutter:
