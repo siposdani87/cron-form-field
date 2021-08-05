@@ -1,15 +1,16 @@
+import 'util.dart';
 import 'cron_entity.dart';
 import 'cron_part.dart';
-
-enum CronMonthType { EVERY, EVERY_START_AT, SPECIFIC, BETWEEN }
+import 'enums/cron_month_type.dart';
 
 class CronMonth extends CronEntity implements CronPart {
   late CronMonthType type;
   late int everyMonth;
   late int? everyStartMonth;
-  late List<String> specificMonths;
+  late List<int> specificMonths;
   late int betweenStartMonth;
   late int betweenEndMonth;
+  bool useAlternativeValue = false;
 
   CronMonth(String originalValue) : super(originalValue) {
     setDefaults();
@@ -24,7 +25,7 @@ class CronMonth extends CronEntity implements CronPart {
     // 1-12, JAN-DEC
     everyMonth = 1;
     everyStartMonth = null;
-    specificMonths = ['JAN'];
+    specificMonths = [1];
     betweenStartMonth = 0;
     betweenEndMonth = 0;
   }
@@ -44,7 +45,7 @@ class CronMonth extends CronEntity implements CronPart {
     everyStartMonth = startMonth;
   }
 
-  void setSpecificMonths(List<String> months) {
+  void setSpecificMonths(List<int> months) {
     type = CronMonthType.SPECIFIC;
     specificMonths = months;
   }
@@ -56,6 +57,10 @@ class CronMonth extends CronEntity implements CronPart {
   }
 
   void _setValue(String value) {
+    if (!validate(value)) {
+      throw ArgumentError('Invalid month part of expression!');
+    }
+    handleAlternativeValue(value);
     type = _getType(value);
     switch (type) {
       case CronMonthType.EVERY:
@@ -66,12 +71,15 @@ class CronMonth extends CronEntity implements CronPart {
         everyMonth = int.parse(parts[1]);
         break;
       case CronMonthType.SPECIFIC:
-        specificMonths = value.split(',').toList();
+        specificMonths = value
+            .split(',')
+            .map((e) => parseAlternativeValue(e, getMonthMap()))
+            .toList();
         break;
       case CronMonthType.BETWEEN:
         var parts = value.split('-');
-        betweenStartMonth = int.parse(parts[0]);
-        betweenEndMonth = int.parse(parts[1]);
+        betweenStartMonth = parseAlternativeValue(parts[0], getMonthMap());
+        betweenEndMonth = parseAlternativeValue(parts[1], getMonthMap());
         break;
     }
   }
@@ -95,9 +103,13 @@ class CronMonth extends CronEntity implements CronPart {
       case CronMonthType.EVERY_START_AT:
         return '${everyStartMonth ?? '*'}/$everyMonth';
       case CronMonthType.SPECIFIC:
-        return specificMonths.isEmpty ? '1' : specificMonths.join(',');
+        return (specificMonths.isEmpty ? [0] : specificMonths)
+            .map((e) =>
+                convertAlternativeValue(useAlternativeValue, e, getMonthMap()))
+            .toList()
+            .join(',');
       case CronMonthType.BETWEEN:
-        return '$betweenStartMonth-$betweenEndMonth';
+        return '${convertAlternativeValue(useAlternativeValue, betweenStartMonth, getMonthMap())}-${convertAlternativeValue(useAlternativeValue, betweenEndMonth, getMonthMap())}';
     }
   }
 
@@ -111,30 +123,23 @@ class CronMonth extends CronEntity implements CronPart {
             ? 'every $everyMonth months starting at $startMonth'
             : 'every $everyMonth months';
       case CronMonthType.SPECIFIC:
-        var months = specificMonths.isEmpty ? [0] : specificMonths;
+        var months = (specificMonths.isEmpty ? [0] : specificMonths)
+            .map((e) => convertAlternativeValue(true, e, getMonthMap()))
+            .toList();
         return months.length == 1
             ? 'at month ${months[0]}'
             : 'at months ${months.getRange(0, months.length - 2).join(', ')} and ${months.last}';
       case CronMonthType.BETWEEN:
-        return 'every month between $betweenStartMonth and $betweenEndMonth';
+        return 'every month between ${convertAlternativeValue(true, betweenStartMonth, getMonthMap())} and ${convertAlternativeValue(true, betweenEndMonth, getMonthMap())}';
     }
   }
 
-  List<String> getMonthList() {
-    return [
-      'JAN',
-      'FEB',
-      'MAR',
-      'APR',
-      'MAY',
-      'JUN',
-      'JUL',
-      'AUG',
-      'SEP',
-      'OCT',
-      'NOV',
-      'DEC',
-    ];
+  bool validate(String part) {
+    return true;
+  }
+
+  void handleAlternativeValue(String value) {
+    useAlternativeValue = isAlternativeValue(value, getMonthMap());
   }
 
   Map<int, String> getMonthMap() {
