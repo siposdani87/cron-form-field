@@ -6,4 +6,6 @@ abstract class CronPart {
   String toString();
 
   String toReadableString();
+
+  bool validate(String part);
 }

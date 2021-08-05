@@ -88,7 +88,7 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
                 _cronExpression.second.setSpecificSeconds([0]);
                 _cronExpression.minute.setSpecificMinutes([0]);
                 _cronExpression.hour.setSpecificHours([0]);
-                _cronExpression.dayOfWeek.setSpecificDayOfWeek(['SUN']);
+                _cronExpression.dayOfWeek.setSpecificDayOfWeek([0]);
               },
             ),
             _expansionPanel(
@@ -114,7 +114,7 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
                 _cronExpression.minute.setSpecificMinutes([0]);
                 _cronExpression.hour.setSpecificHours([0]);
                 _cronExpression.dayOfWeek.setXthDayOfMonth(0, 1);
-                _cronExpression.month.setSpecificMonths(['JAN']);
+                _cronExpression.month.setSpecificMonths([1]);
               },
             ),
           ],
@@ -145,33 +145,6 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
       child: Padding(
         padding: EdgeInsets.only(bottom: 15.0),
         child: Text(_cronExpression.toString()),
-      ),
-    );
-  }
-
-  Widget _dropdownButtonFromList<T>(
-    String key,
-    List<T> items,
-    T? value,
-    void Function(T) onChanged,
-  ) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.0),
-      child: DropdownButton<T>(
-        key: Key('${key}_dropdown_button'),
-        value: value,
-        items: items.map((item) {
-          return DropdownMenuItem<T>(
-            key: Key('${key}_dropdown_menu_item_$item'),
-            child: Text(item.toString()),
-            value: item,
-          );
-        }).toList(),
-        onChanged: (T? value) {
-          setState(() {
-            onChanged(value!);
-          });
-        },
       ),
     );
   }
@@ -265,9 +238,9 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         Text('Every'),
-        _dropdownButtonFromList<int>(
+        _dropdownButtonFromMap<int, String>(
           'minutes_every_minute',
-          _cronExpression.minute.getEveryMinuteList(),
+          _cronExpression.minute.getEveryMinuteMap(),
           _cronExpression.minute.everyMinute,
           (value) {
             _cronExpression.minute.setEveryMinuteStartAt(
@@ -286,9 +259,9 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         Text('Every'),
-        _dropdownButtonFromList<int>(
+        _dropdownButtonFromMap<int, String>(
           'hourly_every_hour',
-          _cronExpression.hour.getHourList(),
+          _cronExpression.hour.getHourMap(),
           _cronExpression.hour.everyHour,
           (value) {
             _cronExpression.hour.setEveryHourStartAt(
@@ -298,9 +271,9 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
           },
         ),
         Text('hour(s) on minute'),
-        _dropdownButtonFromList<int>(
+        _dropdownButtonFromMap<int, String>(
           'hourly_specific_minutes',
-          _cronExpression.minute.getMinuteList(),
+          _cronExpression.minute.getMinuteMap(),
           _cronExpression.minute.specificMinutes[0],
           (value) {
             _cronExpression.minute.setSpecificMinutes([value]);
@@ -315,9 +288,9 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         Text('Every'),
-        _dropdownButtonFromList<int>(
+        _dropdownButtonFromMap<int, String>(
           'daily_every_day',
-          _cronExpression.dayOfMonth.getDayList(),
+          _cronExpression.dayOfMonth.getDayMap(),
           _cronExpression.dayOfMonth.everyDay,
           (value) {
             _cronExpression.dayOfMonth.setEveryStartAtMonth(
@@ -327,17 +300,17 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
           },
         ),
         Text('day(s) at'),
-        _dropdownButtonFromList<int>(
+        _dropdownButtonFromMap<int, String>(
           'daily_specific_hours',
-          _cronExpression.hour.getHourList(),
+          _cronExpression.hour.getHourMap(),
           _cronExpression.hour.specificHours[0],
           (value) {
             _cronExpression.hour.setSpecificHours([value]);
           },
         ),
-        _dropdownButtonFromList<int>(
+        _dropdownButtonFromMap<int, String>(
           'daily_specific_minutes',
-          _cronExpression.minute.getMinuteList(),
+          _cronExpression.minute.getMinuteMap(),
           _cronExpression.minute.specificMinutes[0],
           (value) {
             _cronExpression.minute.setSpecificMinutes([value]);
@@ -350,24 +323,24 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
   Widget _weeklyPanel() {
     return Column(
       children: [
-        ..._cronExpression.dayOfWeek.getWeekdayList().map((weekday) {
-          return _checkboxListTile(weekday);
+        ..._cronExpression.dayOfWeek.getWeekdayMap().entries.map((weekday) {
+          return _checkboxListTile(weekday.key, weekday.value);
         }).toList(),
         Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text('Start time'),
-            _dropdownButtonFromList<int>(
+            _dropdownButtonFromMap<int, String>(
               'weekly_specific_hours',
-              _cronExpression.hour.getHourList(),
+              _cronExpression.hour.getHourMap(),
               _cronExpression.hour.specificHours[0],
               (value) {
                 _cronExpression.hour.setSpecificHours([value]);
               },
             ),
-            _dropdownButtonFromList<int>(
+            _dropdownButtonFromMap<int, String>(
               'weekly_specific_minutes',
-              _cronExpression.minute.getMinuteList(),
+              _cronExpression.minute.getMinuteMap(),
               _cronExpression.minute.specificMinutes[0],
               (value) {
                 _cronExpression.minute.setSpecificMinutes([value]);
@@ -419,17 +392,17 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
           },
         ),
         Text('at'),
-        _dropdownButtonFromList<int>(
+        _dropdownButtonFromMap<int, String>(
           'monthly_specific_hours',
-          _cronExpression.hour.getHourList(),
+          _cronExpression.hour.getHourMap(),
           _cronExpression.hour.specificHours[0],
           (value) {
             _cronExpression.hour.setSpecificHours([value]);
           },
         ),
-        _dropdownButtonFromList<int>(
+        _dropdownButtonFromMap<int, String>(
           'monthly_specific_minutes',
-          _cronExpression.minute.getMinuteList(),
+          _cronExpression.minute.getMinuteMap(),
           _cronExpression.minute.specificMinutes[0],
           (value) {
             _cronExpression.minute.setSpecificMinutes([value]);
@@ -467,26 +440,26 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
           },
         ),
         Text('of'),
-        _dropdownButtonFromList<String>(
+        _dropdownButtonFromMap<int, String>(
           'monthly_every_month',
-          _cronExpression.month.getMonthList(),
+          _cronExpression.month.getMonthMap(),
           _cronExpression.month.specificMonths[0],
           (value) {
             _cronExpression.month.setSpecificMonths([value]);
           },
         ),
         Text('at'),
-        _dropdownButtonFromList<int>(
+        _dropdownButtonFromMap<int, String>(
           'monthly_specific_hours',
-          _cronExpression.hour.getHourList(),
+          _cronExpression.hour.getHourMap(),
           _cronExpression.hour.specificHours[0],
           (value) {
             _cronExpression.hour.setSpecificHours([value]);
           },
         ),
-        _dropdownButtonFromList<int>(
+        _dropdownButtonFromMap<int, String>(
           'monthly_specific_minutes',
-          _cronExpression.minute.getMinuteList(),
+          _cronExpression.minute.getMinuteMap(),
           _cronExpression.minute.specificMinutes[0],
           (value) {
             _cronExpression.minute.setSpecificMinutes([value]);
@@ -496,10 +469,9 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
     );
   }
 
-  Widget _checkboxListTile(String weekday) {
+  Widget _checkboxListTile(int weekday, String weekdayName) {
     return CheckboxListTile(
-      title: Text(weekday),
-      // controlAffinity: ListTileControlAffinity.leading,
+      title: Text(weekdayName),
       value: _cronExpression.dayOfWeek.specificWeekdays.contains(weekday),
       onChanged: (bool? value) {
         _cronExpression.dayOfWeek.toggleSpecificWeekday(weekday);

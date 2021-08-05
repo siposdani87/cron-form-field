@@ -1,9 +1,8 @@
-import 'package:cron_form_field/src/util.dart';
+import 'enums/cron_minute_type.dart';
+import 'util.dart';
 
 import 'cron_entity.dart';
 import 'cron_part.dart';
-
-enum CronMinuteType { EVERY, EVERY_START_AT, SPECIFIC, BETWEEN }
 
 class CronMinute extends CronEntity implements CronPart {
   late CronMinuteType type;
@@ -58,6 +57,9 @@ class CronMinute extends CronEntity implements CronPart {
   }
 
   void _setValue(String value) {
+    if (!validate(value)) {
+      throw ArgumentError('Invalid minute part of expression!');
+    }
     type = _getType(value);
     switch (type) {
       case CronMinuteType.EVERY:
@@ -97,7 +99,7 @@ class CronMinute extends CronEntity implements CronPart {
       case CronMinuteType.EVERY_START_AT:
         return '${everyStartMinute ?? '*'}/$everyMinute';
       case CronMinuteType.SPECIFIC:
-        return specificMinutes.isEmpty ? '0' : specificMinutes.join(',');
+        return (specificMinutes.isEmpty ? [0] : specificMinutes).join(',');
       case CronMinuteType.BETWEEN:
         return '$betweenStartMinute-$betweenEndMinute';
     }
@@ -122,11 +124,17 @@ class CronMinute extends CronEntity implements CronPart {
     }
   }
 
-  List<int> getEveryMinuteList() {
-    return range(1, 60);
+  bool validate(String part) {
+    return true;
   }
 
-  List<int> getMinuteList() {
-    return range(0, 60);
+  Map<int, String> getEveryMinuteMap() {
+    return rangeListToMap(generateRangeList(1, 60));
+  }
+
+  Map<int, String> getMinuteMap() {
+    return rangeListToMap(generateRangeList(0, 60), converter: (num) {
+      return num.toString().padLeft(2, '0');
+    });
   }
 }
