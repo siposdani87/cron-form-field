@@ -15,7 +15,7 @@ In the `pubspec.yaml` of your flutter project, add the following dependency:
 ```yaml
 dependencies:
   ...
-  cron_form_field: "^0.0.1"
+  cron_form_field: "^0.2.0"
 ```
 
 In your library add the following import:
@@ -32,7 +32,7 @@ For help getting started with Flutter, view the online [documentation](https://f
 CronFormField(
   initialValue: '0 0 */3 ? * * *',
   // controller: _cronController,
-  labelText: 'Scheduler',
+  labelText: 'Schedule',
   onChanged: (val) => print(val),
   onSaved: (val) => print(val),
 );

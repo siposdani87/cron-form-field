@@ -1,7 +1,6 @@
 import 'cron_entity.dart';
 import 'cron_part.dart';
-
-enum CronSecondType { NONE, EVERY, EVERY_START_AT, SPECIFIC, BETWEEN }
+import 'enums/cron_second_type.dart';
 
 class CronSecond extends CronEntity implements CronPart {
   late CronSecondType type;
@@ -60,6 +59,9 @@ class CronSecond extends CronEntity implements CronPart {
     if (value == null) {
       return;
     }
+    if (!validate(value)) {
+      throw ArgumentError('Invalid second part of expression!');
+    }
     switch (type) {
       case CronSecondType.EVERY:
         break;
@@ -103,7 +105,7 @@ class CronSecond extends CronEntity implements CronPart {
       case CronSecondType.EVERY_START_AT:
         return '${everyStartSecond ?? '*'}/$everySecond';
       case CronSecondType.SPECIFIC:
-        return specificSeconds.isEmpty ? '0' : specificSeconds.join(',');
+        return (specificSeconds.isEmpty ? [0] : specificSeconds).join(',');
       case CronSecondType.BETWEEN:
         return '$betweenStartSecond-$betweenEndSecond';
       case CronSecondType.NONE:
@@ -130,5 +132,9 @@ class CronSecond extends CronEntity implements CronPart {
       case CronSecondType.NONE:
         return '';
     }
+  }
+
+  bool validate(String part) {
+    return true;
   }
 }

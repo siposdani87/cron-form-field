@@ -1,7 +1,6 @@
 import 'cron_entity.dart';
 import 'cron_part.dart';
-
-enum CronYearType { NONE, EVERY, EVERY_START_AT, SPECIFIC, BETWEEN }
+import 'enums/cron_year_type.dart';
 
 class CronYear extends CronEntity implements CronPart {
   late CronYearType type;
@@ -60,6 +59,9 @@ class CronYear extends CronEntity implements CronPart {
     type = _getType(value);
     if (value == null) {
       return;
+    }
+    if (!validate(value)) {
+      throw ArgumentError('Invalid year part of expression!');
     }
     switch (type) {
       case CronYearType.EVERY:
@@ -134,5 +136,9 @@ class CronYear extends CronEntity implements CronPart {
       case CronYearType.NONE:
         return '';
     }
+  }
+
+  bool validate(String part) {
+    return true;
   }
 }

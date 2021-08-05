@@ -8,7 +8,10 @@ import 'src/cron_month.dart';
 import 'src/cron_second.dart';
 import 'src/cron_year.dart';
 
+enum CronExpressionType { STANDARD, QUARTZ }
+
 class CronExpression {
+  CronExpressionType type;
   CronSecond second;
   CronMinute minute;
   CronHour hour;
@@ -23,6 +26,7 @@ class CronExpression {
     this._day,
     this.month,
     this.year,
+    this.type,
   );
 
   factory CronExpression.fromString(String cronExpression) {
@@ -30,28 +34,37 @@ class CronExpression {
     if (expressionParts.length < 5) {
       expressionParts = '* * ? * *'.split(' ');
     }
-    int offset = expressionParts.length == 5 ? 0 : 1;
+    var type = expressionParts.contains('?')
+        ? CronExpressionType.QUARTZ
+        : CronExpressionType.STANDARD;
+    if (expressionParts.length == 5) {
+      expressionParts.insert(0, '');
+      expressionParts.add('');
+    } else if (expressionParts.length == 6) {
+      expressionParts.add('');
+    }
 
     return CronExpression(
       CronSecond.fromString(
-        offset == 0 ? null : expressionParts[0],
+        expressionParts[0].isEmpty ? null : expressionParts[0],
       ),
       CronMinute.fromString(
-        expressionParts[offset + 0],
+        expressionParts[1],
       ),
       CronHour.fromString(
-        expressionParts[offset + 1],
+        expressionParts[2],
       ),
       CronDay.fromString(
-        expressionParts[offset + 2],
-        expressionParts[offset + 4],
+        expressionParts[3],
+        expressionParts[5],
       ),
       CronMonth.fromString(
-        expressionParts[offset + 3],
+        expressionParts[4],
       ),
       CronYear.fromString(
-        expressionParts.length == 7 ? expressionParts[6] : null,
+        expressionParts[6].isEmpty ? null : expressionParts[6],
       ),
+      type,
     );
   }
 
@@ -77,7 +90,10 @@ class CronExpression {
       month.toString(),
       dayOfWeek.toString(),
       year.toString(),
-    ].join(' ').trim();
+    ]
+        .join(' ')
+        .trim()
+        .replaceFirst('?', type == CronExpressionType.STANDARD ? '*' : '?');
   }
 
   String toReadableString() {
