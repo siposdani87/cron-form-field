@@ -5,7 +5,7 @@
 <a href="https://www.buymeacoffee.com/siposdani87" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me A Coffee" style="width: 150px !important;"></a>
 
 This CronFormField package written in Dart for the Flutter.\
-You can edit cron expressions with this form field in a alert dialog.\
+You can edit cron expressions with this form field in an alert dialog.\
 This widget extend TextField to has more useful behaviour.
 
 ## Usage
@@ -38,7 +38,7 @@ CronFormField(
 );
 ```
 
-The result of val in `onChanged`, `validator` and `onSaved` will be a String.\
+The result of val in `onChanged`, `validator` and `onSaved` will be a String.
 
 ## Preview
-![Overview](https://raw.githubusercontent.com/siposdani87/cron_form_field/master/doc/images/cron_form_field.png)
+![Overview](https://raw.githubusercontent.com/siposdani87/cron-form-field/master/doc/images/cron_form_field.png)
