@@ -1,4 +1,4 @@
-import 'cron_day_type.dart';
+import 'enums/cron_day_type.dart';
 import 'cron_part.dart';
 import 'day_of_month.dart';
 import 'day_of_week.dart';
@@ -53,5 +53,13 @@ class CronDay implements CronPart {
     }
 
     return dayOfWeek.toReadableString();
+  }
+
+  bool validate(String part) {
+    if (!part.contains('?')) {
+      return dayOfMonth.validate(part);
+    }
+
+    return dayOfWeek.validate(part);
   }
 }

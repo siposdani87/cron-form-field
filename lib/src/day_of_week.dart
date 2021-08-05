@@ -1,7 +1,6 @@
 import 'util.dart';
-
 import 'cron_day.dart';
-import 'cron_day_type.dart';
+import 'enums/cron_day_type.dart';
 import 'cron_entity.dart';
 import 'cron_part.dart';
 
@@ -9,10 +8,11 @@ class DayOfWeek extends CronEntity implements CronPart {
   CronDay parent;
   late int everyDay;
   late int? everyStartDay;
-  late List<String> specificWeekdays;
+  late List<int> specificWeekdays;
   late int xthWeekday;
   late int xthWeeks;
   late int? lastDay;
+  bool useAlternativeValue = false;
 
   DayOfWeek(String originalValue, this.parent) : super(originalValue) {
     setDefaults();
@@ -27,7 +27,7 @@ class DayOfWeek extends CronEntity implements CronPart {
     // 0-6, SUN-SAT
     everyDay = 1;
     everyStartDay = null;
-    specificWeekdays = ['SUN'];
+    specificWeekdays = [0];
     xthWeekday = 0;
     xthWeeks = 1;
     lastDay = null;
@@ -48,12 +48,12 @@ class DayOfWeek extends CronEntity implements CronPart {
     everyStartDay = startDay;
   }
 
-  void setSpecificDayOfWeek(List<String> weekdays) {
+  void setSpecificDayOfWeek(List<int> weekdays) {
     parent.type = CronDayType.SPECIFIC_DAY_OF_WEEK;
     specificWeekdays = weekdays;
   }
 
-  void toggleSpecificWeekday(String weekday) {
+  void toggleSpecificWeekday(int weekday) {
     var weekdays = specificWeekdays.toList();
     if (weekdays.contains(weekday)) {
       weekdays.remove(weekday);
@@ -75,6 +75,10 @@ class DayOfWeek extends CronEntity implements CronPart {
   }
 
   void _setValue(String value) {
+    if (!validate(value)) {
+      throw ArgumentError('Invalid day of week part of expression!');
+    }
+    handleAlternativeValue(value);
     switch (parent.type) {
       case CronDayType.EVERY_WEEK:
         break;
@@ -88,7 +92,10 @@ class DayOfWeek extends CronEntity implements CronPart {
       case CronDayType.EVERY_START_AT_MONTH:
         break;
       case CronDayType.SPECIFIC_DAY_OF_WEEK:
-        specificWeekdays = value.split(',').toList();
+        specificWeekdays = value
+            .split(',')
+            .map((e) => parseAlternativeValue(e, getWeekdayMap()))
+            .toList();
         break;
       case CronDayType.SPECIFIC_DAY_OF_MONTH:
         break;
@@ -105,7 +112,7 @@ class DayOfWeek extends CronEntity implements CronPart {
         break;
       case CronDayType.XTH_DAY_OF_MONTH:
         var parts = value.split('#');
-        xthWeekday = int.parse(parts[0]);
+        xthWeekday = parseAlternativeValue(parts[0], getWeekdayMap());
         xthWeeks = int.parse(parts[1]);
     }
   }
@@ -135,7 +142,14 @@ class DayOfWeek extends CronEntity implements CronPart {
       case CronDayType.EVERY_START_AT_MONTH:
         return '?';
       case CronDayType.SPECIFIC_DAY_OF_WEEK:
-        return specificWeekdays.isEmpty ? 'SUN' : specificWeekdays.join(',');
+        return (specificWeekdays.isEmpty ? [0] : specificWeekdays)
+            .map((e) => convertAlternativeValue(
+                  useAlternativeValue,
+                  e,
+                  getWeekdayMap(),
+                ))
+            .toList()
+            .join(',');
       case CronDayType.SPECIFIC_DAY_OF_MONTH:
         return '?';
       case CronDayType.LAST_DAY_OF_MONTH:
@@ -149,7 +163,7 @@ class DayOfWeek extends CronEntity implements CronPart {
       case CronDayType.NEAREST_WEEKDAY_OF_MONTH:
         return '?';
       case CronDayType.XTH_DAY_OF_MONTH:
-        return '$xthWeekday#$xthWeeks';
+        return '${convertAlternativeValue(useAlternativeValue, xthWeekday, getWeekdayMap())}#$xthWeeks';
     }
   }
 
@@ -167,7 +181,13 @@ class DayOfWeek extends CronEntity implements CronPart {
       case CronDayType.EVERY_START_AT_MONTH:
         return '';
       case CronDayType.SPECIFIC_DAY_OF_WEEK:
-        var days = specificWeekdays.isEmpty ? ['SUN'] : specificWeekdays;
+        var days = (specificWeekdays.isEmpty ? [0] : specificWeekdays)
+            .map((e) => convertAlternativeValue(
+                  true,
+                  e,
+                  getWeekdayMap(),
+                ))
+            .toList();
         return days.length == 1
             ? 'on the ${days[0]} day'
             : 'on the ${days.getRange(0, days.length - 2).join(', ')} and ${days.last} day';
@@ -184,12 +204,16 @@ class DayOfWeek extends CronEntity implements CronPart {
       case CronDayType.NEAREST_WEEKDAY_OF_MONTH:
         return '';
       case CronDayType.XTH_DAY_OF_MONTH:
-        return 'on the ${serialNumberName(xthWeeks)} $xthWeekday of the month';
+        return 'on the ${serialNumberName(xthWeeks)} ${convertAlternativeValue(true, xthWeekday, getWeekdayMap())} of the month';
     }
   }
 
-  List<String> getWeekdayList() {
-    return ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  bool validate(String part) {
+    return true;
+  }
+
+  void handleAlternativeValue(String value) {
+    useAlternativeValue = isAlternativeValue(value, getWeekdayMap());
   }
 
   Map<int, String> getWeekdayMap() {

@@ -1,9 +1,8 @@
-import 'package:cron_form_field/src/util.dart';
+import 'enums/cron_hour_type.dart';
+import 'util.dart';
 
 import 'cron_entity.dart';
 import 'cron_part.dart';
-
-enum CronHourType { EVERY, EVERY_START_AT, SPECIFIC, BETWEEN }
 
 class CronHour extends CronEntity implements CronPart {
   late CronHourType type;
@@ -58,6 +57,9 @@ class CronHour extends CronEntity implements CronPart {
   }
 
   void _setValue(String value) {
+    if (!validate(value)) {
+      throw ArgumentError('Invalid hour part of expression!');
+    }
     type = _getType(value);
     switch (type) {
       case CronHourType.EVERY:
@@ -97,7 +99,7 @@ class CronHour extends CronEntity implements CronPart {
       case CronHourType.EVERY_START_AT:
         return '${everyStartHour ?? '*'}/$everyHour';
       case CronHourType.SPECIFIC:
-        return specificHours.isEmpty ? '0' : specificHours.join(',');
+        return (specificHours.isEmpty ? [0] : specificHours).join(',');
       case CronHourType.BETWEEN:
         return '$betweenStartHour-$betweenEndHour';
     }
@@ -122,7 +124,13 @@ class CronHour extends CronEntity implements CronPart {
     }
   }
 
-  List<int> getHourList() {
-    return range(0, 24);
+  bool validate(String part) {
+    return true;
+  }
+
+  Map<int, String> getHourMap() {
+    return rangeListToMap(generateRangeList(0, 24), converter: (num) {
+      return num.toString().padLeft(2, '0');
+    });
   }
 }

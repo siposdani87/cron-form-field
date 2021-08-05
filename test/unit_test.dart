@@ -92,8 +92,19 @@ void main() {
       expect(CronExpression.fromString(expression).toString(), expression);
     },);
 
+    test('Parse every month on the third Monday of the Month at 6am',
+          () {
+        var expression = '0 0 6 ? * MON#3';
+        expect(CronExpression.fromString(expression).toString(), expression);
+      },);
+
     test('Parse every day at noon in January and June', () {
       var expression = '0 0 12 ? JAN,JUN *';
+      expect(CronExpression.fromString(expression).toString(), expression);
+    });
+
+    test('Parse every day at noon in February and December', () {
+      var expression = '0 0 12 ? 2,12 *';
       expect(CronExpression.fromString(expression).toString(), expression);
     });
 

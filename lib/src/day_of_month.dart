@@ -1,8 +1,7 @@
 import 'util.dart';
-
 import 'cron_entity.dart';
 import 'cron_day.dart';
-import 'cron_day_type.dart';
+import 'enums/cron_day_type.dart';
 import 'cron_part.dart';
 
 class DayOfMonth extends CronEntity implements CronPart {
@@ -73,6 +72,9 @@ class DayOfMonth extends CronEntity implements CronPart {
   }
 
   void _setValue(String value) {
+    if (!validate(value)) {
+      throw ArgumentError('Invalid day of month part of expression!');
+    }
     switch (parent.type) {
       case CronDayType.EVERY_WEEK:
         break;
@@ -139,7 +141,7 @@ class DayOfMonth extends CronEntity implements CronPart {
       case CronDayType.SPECIFIC_DAY_OF_WEEK:
         return '?';
       case CronDayType.SPECIFIC_DAY_OF_MONTH:
-        return specificMonthDays.isEmpty ? '1' : specificMonthDays.join(',');
+        return (specificMonthDays.isEmpty ? [1] : specificMonthDays).join(',');
       case CronDayType.LAST_DAY_OF_MONTH:
         return '${lastDay ?? ''}L';
       case CronDayType.LAST_WEEKDAY_OF_MONTH:
@@ -190,7 +192,11 @@ class DayOfMonth extends CronEntity implements CronPart {
     }
   }
 
-  List<int> getDayList() {
-    return range(1, 32);
+  bool validate(String part) {
+    return true;
+  }
+
+  Map<int, String> getDayMap() {
+    return rangeListToMap(generateRangeList(1, 32));
   }
 }

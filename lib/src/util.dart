@@ -1,4 +1,52 @@
-range(int a, [int? stop, int? step]) {
+bool isAlternativeValue(String value, Map<int, String> map) {
+  var result = false;
+  map.values.forEach((entity) {
+    if (value.contains(entity)) {
+      result = true;
+    }
+  });
+
+  return result;
+}
+
+int parseAlternativeValue(String value, Map<int, String> map) {
+  var num = int.tryParse(value);
+  if (num != null) {
+    return num;
+  }
+  var result = value;
+  var entities = map.keys.toList()..sort((a, b) => b.compareTo(a));
+  entities.forEach((key) {
+    result = result.replaceAll(map[key]!, key.toString());
+  });
+
+  return int.parse(result);
+}
+
+String convertAlternativeValue(
+  bool isAlternative,
+  int value,
+  Map<int, String> map,
+) {
+  if (!isAlternative) {
+    return value.toString();
+  }
+
+  return map[value].toString();
+}
+
+Map<int, String> rangeListToMap(
+  List<int> list, {
+  String Function(int num)? converter,
+}) {
+  var converterMethod = converter ?? (num) => num.toString();
+  Map<int, String> map = {};
+  list.forEach((num) => map.addAll({num: converterMethod(num)}));
+
+  return map;
+}
+
+List<int> generateRangeList(int a, [int? stop, int? step]) {
   int start;
 
   if (stop == null) {
