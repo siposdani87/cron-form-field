@@ -15,7 +15,7 @@ In the `pubspec.yaml` of your flutter project, add the following dependency:
 ```yaml
 dependencies:
   ...
-  cron_form_field: "^0.2.0"
+  cron_form_field: "^0.3.0"
 ```
 
 In your library add the following import:
