@@ -4,9 +4,7 @@
 
 <a href="https://www.buymeacoffee.com/siposdani87" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me A Coffee" style="width: 150px !important;"></a>
 
-This CronFormField package written in Dart for the Flutter.\
-You can edit cron expressions with this form field in an alert dialog.\
-This widget extend TextField to has more useful behaviour.
+This CronFormField package is written in Dart for the Flutter. You can edit cron expressions with this form field in an alert dialog. This widget extends TextField to have more useful behavior. It supports both Standard and Quartz cron expressions with allowed and alternative values.
 
 ## Usage
 
