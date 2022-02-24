@@ -76,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   return null;
                 },
                 onSaved: (val) => setState(() => _valueSaved = val ?? ''),
+                // outputFormat: CronExpressionOutputFormat.AUTO,
               ),
               const SizedBox(height: 30),
               const Text(

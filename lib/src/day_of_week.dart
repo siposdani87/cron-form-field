@@ -1,3 +1,4 @@
+import 'package:cron_form_field/src/enums/cron_expression_output_format.dart';
 import 'package:cron_form_field/src/util.dart';
 import 'package:cron_form_field/src/cron_day.dart';
 import 'package:cron_form_field/src/enums/cron_day_type.dart';
@@ -135,6 +136,10 @@ class DayOfWeek extends CronEntity implements CronPart {
 
   @override
   String toString() {
+    return toFormatString(CronExpressionOutputFormat.AUTO);
+  }
+
+  String toFormatString(CronExpressionOutputFormat outputFormat) {
     switch (parent.type) {
       case CronDayType.EVERY_WEEK:
         return '*';
@@ -147,7 +152,7 @@ class DayOfWeek extends CronEntity implements CronPart {
       case CronDayType.SPECIFIC_DAY_OF_WEEK:
         return (specificWeekdays.isEmpty ? [0] : specificWeekdays)
             .map((e) => convertAlternativeValue(
-                  useAlternativeValue,
+                  outputFormat.isAlternative(useAlternativeValue),
                   e,
                   getWeekdayMap(),
                 ))
@@ -166,7 +171,7 @@ class DayOfWeek extends CronEntity implements CronPart {
       case CronDayType.NEAREST_WEEKDAY_OF_MONTH:
         return '?';
       case CronDayType.XTH_DAY_OF_MONTH:
-        return '${convertAlternativeValue(useAlternativeValue, xthWeekday, getWeekdayMap())}#$xthWeeks';
+        return '${convertAlternativeValue(outputFormat.isAlternative(useAlternativeValue), xthWeekday, getWeekdayMap())}#$xthWeeks';
     }
   }
 
