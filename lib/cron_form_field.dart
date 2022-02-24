@@ -4,10 +4,12 @@
 
 library cron_form_field;
 
+import 'package:cron_form_field/src/enums/cron_expression_output_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:cron_form_field/src/cron_picker_dialog.dart';
+
+export 'package:cron_form_field/src/enums/cron_expression_output_format.dart';
 
 /// A [CronFormField] that contains a [TextField].
 ///
@@ -165,6 +167,8 @@ class CronFormField extends FormField<String> {
   /// The cancel button text on dialog
   final String dialogCancelText;
 
+  final CronExpressionOutputFormat? outputFormat;
+
   /// The value change event
   final ValueChanged<String>? onChanged;
 
@@ -187,6 +191,7 @@ class CronFormField extends FormField<String> {
     this.dialogCancelText = 'Cancel',
     this.dialogDoneText = 'Done',
     this.onChanged,
+    this.outputFormat = CronExpressionOutputFormat.AUTO,
     String? initialValue,
     FocusNode? focusNode,
     InputDecoration? decoration,
@@ -379,6 +384,7 @@ class _CronFormFieldState extends FormFieldState<String> {
           title: widget.dialogTitle ?? widget.labelText,
           btnDoneText: widget.dialogDoneText,
           btnCancelText: widget.dialogCancelText,
+          outputFormat: widget.outputFormat!,
         );
       },
     );

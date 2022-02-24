@@ -6,6 +6,7 @@ import 'package:cron_form_field/src/cron_minute.dart';
 import 'package:cron_form_field/src/cron_month.dart';
 import 'package:cron_form_field/src/cron_second.dart';
 import 'package:cron_form_field/src/cron_year.dart';
+import 'package:cron_form_field/src/enums/cron_expression_output_format.dart';
 
 enum CronExpressionType { STANDARD, QUARTZ }
 
@@ -33,7 +34,7 @@ class CronExpression {
     if (expressionParts.length < 5) {
       expressionParts = '* * ? * *'.split(' ');
     }
-    var type = expressionParts.contains('?')
+    var expressionType = expressionParts.contains('?')
         ? CronExpressionType.QUARTZ
         : CronExpressionType.STANDARD;
     if (expressionParts.length == 5) {
@@ -63,7 +64,7 @@ class CronExpression {
       CronYear.fromString(
         expressionParts[6].isEmpty ? null : expressionParts[6],
       ),
-      type,
+      expressionType,
     );
   }
 
@@ -82,13 +83,17 @@ class CronExpression {
 
   @override
   String toString() {
+    return toFormatString(CronExpressionOutputFormat.AUTO);
+  }
+
+  String toFormatString(CronExpressionOutputFormat outputFormat) {
     return [
       second.toString(),
       minute.toString(),
       hour.toString(),
       dayOfMonth.toString(),
-      month.toString(),
-      dayOfWeek.toString(),
+      month.toFormatString(outputFormat),
+      dayOfWeek.toFormatString(outputFormat),
       year.toString(),
     ]
         .join(' ')

@@ -1,3 +1,4 @@
+import 'package:cron_form_field/src/enums/cron_expression_output_format.dart';
 import 'package:cron_form_field/src/util.dart';
 import 'package:cron_form_field/src/cron_entity.dart';
 import 'package:cron_form_field/src/cron_part.dart';
@@ -100,6 +101,10 @@ class CronMonth extends CronEntity implements CronPart {
 
   @override
   String toString() {
+    return toFormatString(CronExpressionOutputFormat.AUTO);
+  }
+
+  String toFormatString(CronExpressionOutputFormat outputFormat) {
     switch (type) {
       case CronMonthType.EVERY:
         return '*';
@@ -107,12 +112,15 @@ class CronMonth extends CronEntity implements CronPart {
         return '${everyStartMonth ?? '*'}/$everyMonth';
       case CronMonthType.SPECIFIC:
         return (specificMonths.isEmpty ? [0] : specificMonths)
-            .map((e) =>
-                convertAlternativeValue(useAlternativeValue, e, getMonthMap()))
+            .map((e) => convertAlternativeValue(
+                  outputFormat.isAlternative(useAlternativeValue),
+                  e,
+                  getMonthMap(),
+                ))
             .toList()
             .join(',');
       case CronMonthType.BETWEEN:
-        return '${convertAlternativeValue(useAlternativeValue, betweenStartMonth, getMonthMap())}-${convertAlternativeValue(useAlternativeValue, betweenEndMonth, getMonthMap())}';
+        return '${convertAlternativeValue(outputFormat.isAlternative(useAlternativeValue), betweenStartMonth, getMonthMap())}-${convertAlternativeValue(useAlternativeValue, betweenEndMonth, getMonthMap())}';
     }
   }
 

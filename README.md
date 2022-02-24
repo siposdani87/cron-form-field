@@ -33,6 +33,7 @@ CronFormField(
   labelText: 'Schedule',
   onChanged: (val) => print(val),
   onSaved: (val) => print(val),
+  // outputFormat: CronExpressionOutputFormat.AUTO
 );
 ```
 

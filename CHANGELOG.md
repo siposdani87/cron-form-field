@@ -1,6 +1,8 @@
-## 0.3.0 - 2021-11-21
+## 0.3.0 - 2022-02-24
 
-* .
+* Add outputFormat property (default: CronExpressionOutputFormat.AUTO).
+* Fix dart lint issues
+* Upgrade dependencies
 
 ## 0.2.0 - 2021-08-05
 

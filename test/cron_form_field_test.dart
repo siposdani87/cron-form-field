@@ -5,8 +5,8 @@ import 'package:cron_form_field/cron_form_field.dart';
 
 void main() {
   testWidgets('Testing instantiate CronFormField', (WidgetTester tester) async {
-    final cronExpression = '* 5 * ? * *';
-    var myWidget = MyWidget(cronExpression: cronExpression);
+    const cronExpression = '* 5 * ? * *';
+    var myWidget = const MyWidget(cronExpression: cronExpression);
     await tester.pumpWidget(myWidget);
 
     expect(
@@ -44,7 +44,7 @@ void main() {
     );
     var button = find.ancestor(
       of: buttonLabel,
-      matching: find.byKey(ValueKey('minutes_every_minute_dropdown_button')),
+      matching: find.byKey(const ValueKey('minutes_every_minute_dropdown_button')),
     );
     expect(
       button,
@@ -63,7 +63,7 @@ void main() {
     );
     var item = find.ancestor(
       of: itemLabel,
-      matching: find.byKey(ValueKey('minutes_every_minute_dropdown_menu_item_6')).last,
+      matching: find.byKey(const ValueKey('minutes_every_minute_dropdown_menu_item_6')).last,
     );
     expect(
       item,
@@ -109,7 +109,7 @@ void main() {
 class MyWidget extends StatefulWidget {
   final String cronExpression;
 
-  MyWidget({Key? key, required this.cronExpression}) : super(key: key);
+  const MyWidget({Key? key, required this.cronExpression}) : super(key: key);
 
   @override
   _MyWidgetState createState() => _MyWidgetState();

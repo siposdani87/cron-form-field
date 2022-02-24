@@ -1,4 +1,5 @@
 import 'package:cron_form_field/cron_expression.dart';
+import 'package:cron_form_field/src/enums/cron_expression_output_format.dart';
 import 'package:flutter/material.dart';
 
 class CronPickerDialog extends StatefulWidget {
@@ -6,6 +7,7 @@ class CronPickerDialog extends StatefulWidget {
   final String? title;
   final String btnDoneText;
   final String btnCancelText;
+  final CronExpressionOutputFormat outputFormat;
 
   const CronPickerDialog({
     Key? key,
@@ -13,6 +15,7 @@ class CronPickerDialog extends StatefulWidget {
     this.title,
     required this.btnDoneText,
     required this.btnCancelText,
+    required this.outputFormat,
   }) : super(key: key);
 
   @override
@@ -29,7 +32,7 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
   void initState() {
     super.initState();
 
-    _cronExpression = new CronExpression.fromString(widget.value);
+    _cronExpression = CronExpression.fromString(widget.value);
   }
 
   @override
@@ -129,7 +132,7 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
         TextButton(
           onPressed: () => Navigator.pop(
             context,
-            _cronExpression.toString(),
+            _cronExpression.toFormatString(widget.outputFormat),
           ),
           child: Text(widget.btnDoneText),
         ),
@@ -145,7 +148,9 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(bottom: 15.0),
-        child: Text(_cronExpression.toString()),
+        child: Text(
+          _cronExpression.toFormatString(widget.outputFormat),
+        ),
       ),
     );
   }
