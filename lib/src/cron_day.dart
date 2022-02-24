@@ -1,7 +1,7 @@
-import 'enums/cron_day_type.dart';
-import 'cron_part.dart';
-import 'day_of_month.dart';
-import 'day_of_week.dart';
+import 'package:cron_form_field/src/enums/cron_day_type.dart';
+import 'package:cron_form_field/src/cron_part.dart';
+import 'package:cron_form_field/src/day_of_month.dart';
+import 'package:cron_form_field/src/day_of_week.dart';
 
 class CronDay implements CronPart {
   String originalDayOfMonthValue;
@@ -22,10 +22,12 @@ class CronDay implements CronPart {
     return CronDay(dayOfMonthExpression, dayOfWeekExpression);
   }
 
+  @override
   void setDefaults() {
     // empty block
   }
 
+  @override
   void reset() {
     type = CronDayType.EVERY_MONTH;
     setDefaults();
@@ -47,6 +49,7 @@ class CronDay implements CronPart {
     return DayOfWeek.getType(dayOfWeekValue);
   }
 
+  @override
   String toReadableString() {
     if (!originalDayOfMonthValue.contains('?')) {
       return dayOfMonth.toReadableString();
@@ -55,6 +58,7 @@ class CronDay implements CronPart {
     return dayOfWeek.toReadableString();
   }
 
+  @override
   bool validate(String part) {
     if (!part.contains('?')) {
       return dayOfMonth.validate(part);

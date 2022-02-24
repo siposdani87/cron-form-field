@@ -1,8 +1,8 @@
-import 'util.dart';
-import 'cron_day.dart';
-import 'enums/cron_day_type.dart';
-import 'cron_entity.dart';
-import 'cron_part.dart';
+import 'package:cron_form_field/src/util.dart';
+import 'package:cron_form_field/src/cron_day.dart';
+import 'package:cron_form_field/src/enums/cron_day_type.dart';
+import 'package:cron_form_field/src/cron_entity.dart';
+import 'package:cron_form_field/src/cron_part.dart';
 
 class DayOfWeek extends CronEntity implements CronPart {
   CronDay parent;
@@ -23,6 +23,7 @@ class DayOfWeek extends CronEntity implements CronPart {
     return DayOfWeek(dayOfWeekExpression, parent);
   }
 
+  @override
   void setDefaults() {
     // 0-6, SUN-SAT
     everyDay = 1;
@@ -33,6 +34,7 @@ class DayOfWeek extends CronEntity implements CronPart {
     lastDay = null;
   }
 
+  @override
   void reset() {
     parent.type = CronDayType.EVERY_WEEK;
     setDefaults();
@@ -131,6 +133,7 @@ class DayOfWeek extends CronEntity implements CronPart {
     return CronDayType.SPECIFIC_DAY_OF_WEEK;
   }
 
+  @override
   String toString() {
     switch (parent.type) {
       case CronDayType.EVERY_WEEK:
@@ -167,6 +170,7 @@ class DayOfWeek extends CronEntity implements CronPart {
     }
   }
 
+  @override
   String toReadableString() {
     switch (parent.type) {
       case CronDayType.EVERY_WEEK:
@@ -208,6 +212,7 @@ class DayOfWeek extends CronEntity implements CronPart {
     }
   }
 
+  @override
   bool validate(String part) {
     return true;
   }

@@ -1,8 +1,7 @@
-import 'enums/cron_hour_type.dart';
-import 'util.dart';
-
-import 'cron_entity.dart';
-import 'cron_part.dart';
+import 'package:cron_form_field/src/enums/cron_hour_type.dart';
+import 'package:cron_form_field/src/util.dart';
+import 'package:cron_form_field/src/cron_entity.dart';
+import 'package:cron_form_field/src/cron_part.dart';
 
 class CronHour extends CronEntity implements CronPart {
   late CronHourType type;
@@ -21,6 +20,7 @@ class CronHour extends CronEntity implements CronPart {
     return CronHour(hourExpression);
   }
 
+  @override
   void setDefaults() {
     // 0-23
     everyHour = 1;
@@ -30,6 +30,7 @@ class CronHour extends CronEntity implements CronPart {
     betweenEndHour = 0;
   }
 
+  @override
   void reset() {
     type = CronHourType.EVERY;
     setDefaults();
@@ -92,6 +93,7 @@ class CronHour extends CronEntity implements CronPart {
     return CronHourType.SPECIFIC;
   }
 
+  @override
   String toString() {
     switch (type) {
       case CronHourType.EVERY:
@@ -105,6 +107,7 @@ class CronHour extends CronEntity implements CronPart {
     }
   }
 
+  @override
   String toReadableString() {
     switch (type) {
       case CronHourType.EVERY:
@@ -124,12 +127,13 @@ class CronHour extends CronEntity implements CronPart {
     }
   }
 
+  @override
   bool validate(String part) {
     return true;
   }
 
   Map<int, String> getHourMap() {
-    return rangeListToMap(generateRangeList(0, 24), converter: (num) {
+    return rangeListToMap(generateRangeList(0, 24), converter: (int num) {
       return num.toString().padLeft(2, '0');
     });
   }

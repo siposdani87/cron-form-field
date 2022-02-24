@@ -3,6 +3,7 @@ abstract class CronPart {
 
   void setDefaults();
 
+  @override
   String toString();
 
   String toReadableString();
