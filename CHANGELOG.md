@@ -1,3 +1,7 @@
+## 0.4.0 - 2022-02-24
+
+*
+
 ## 0.3.0 - 2022-02-24
 
 * Add outputFormat property (default: CronExpressionOutputFormat.AUTO).
