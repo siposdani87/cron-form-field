@@ -1,6 +1,6 @@
-import 'cron_entity.dart';
-import 'cron_part.dart';
-import 'enums/cron_year_type.dart';
+import 'package:cron_form_field/src/cron_entity.dart';
+import 'package:cron_form_field/src/cron_part.dart';
+import 'package:cron_form_field/src/enums/cron_year_type.dart';
 
 class CronYear extends CronEntity implements CronPart {
   late CronYearType type;
@@ -21,6 +21,7 @@ class CronYear extends CronEntity implements CronPart {
     return CronYear(yearExpression);
   }
 
+  @override
   void setDefaults() {
     everyYear = null;
     everyStartYear = null;
@@ -29,6 +30,7 @@ class CronYear extends CronEntity implements CronPart {
     betweenEndYear = 0;
   }
 
+  @override
   void reset() {
     type = CronYearType.EVERY;
     setDefaults();
@@ -99,6 +101,7 @@ class CronYear extends CronEntity implements CronPart {
     return CronYearType.SPECIFIC;
   }
 
+  @override
   String toString() {
     switch (type) {
       case CronYearType.EVERY:
@@ -116,6 +119,7 @@ class CronYear extends CronEntity implements CronPart {
     }
   }
 
+  @override
   String toReadableString() {
     switch (type) {
       case CronYearType.EVERY:
@@ -138,6 +142,7 @@ class CronYear extends CronEntity implements CronPart {
     }
   }
 
+  @override
   bool validate(String part) {
     return true;
   }

@@ -1,10 +1,10 @@
 bool isAlternativeValue(String value, Map<int, String> map) {
   var result = false;
-  map.values.forEach((entity) {
+  for (var entity in map.values) {
     if (value.contains(entity)) {
       result = true;
     }
-  });
+  }
 
   return result;
 }
@@ -16,9 +16,9 @@ int parseAlternativeValue(String value, Map<int, String> map) {
   }
   var result = value;
   var entities = map.keys.toList()..sort((a, b) => b.compareTo(a));
-  entities.forEach((key) {
+  for (var key in entities) {
     result = result.replaceAll(map[key]!, key.toString());
-  });
+  }
 
   return int.parse(result);
 }
@@ -39,9 +39,11 @@ Map<int, String> rangeListToMap(
   List<int> list, {
   String Function(int num)? converter,
 }) {
-  var converterMethod = converter ?? (num) => num.toString();
+  var converterMethod = converter ?? (int num) => num.toString();
   Map<int, String> map = {};
-  list.forEach((num) => map.addAll({num: converterMethod(num)}));
+  for (var num in list) {
+    map.addAll({num: converterMethod(num)});
+  }
 
   return map;
 }
@@ -58,10 +60,11 @@ List<int> generateRangeList(int a, [int? stop, int? step]) {
 
   if (step == 0) throw Exception('Step cannot be 0');
 
-  if (step == null)
+  if (step == null) {
     start < stop
         ? step = 1 // walk forwards
-        : step = -1; // walk backwards
+        : step = -1;
+  } // walk backwards
 
   // return [] if step is in wrong direction
   return start < stop == step > 0

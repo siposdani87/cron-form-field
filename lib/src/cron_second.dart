@@ -1,6 +1,6 @@
-import 'cron_entity.dart';
-import 'cron_part.dart';
-import 'enums/cron_second_type.dart';
+import 'package:cron_form_field/src/cron_entity.dart';
+import 'package:cron_form_field/src/cron_part.dart';
+import 'package:cron_form_field/src/enums/cron_second_type.dart';
 
 class CronSecond extends CronEntity implements CronPart {
   late CronSecondType type;
@@ -19,6 +19,7 @@ class CronSecond extends CronEntity implements CronPart {
     return CronSecond(secondExpression);
   }
 
+  @override
   void setDefaults() {
     // 0-59
     everySecond = 1;
@@ -28,6 +29,7 @@ class CronSecond extends CronEntity implements CronPart {
     betweenEndSecond = 0;
   }
 
+  @override
   void reset() {
     type = CronSecondType.EVERY;
     setDefaults();
@@ -98,6 +100,7 @@ class CronSecond extends CronEntity implements CronPart {
     return CronSecondType.SPECIFIC;
   }
 
+  @override
   String toString() {
     switch (type) {
       case CronSecondType.EVERY:
@@ -113,6 +116,7 @@ class CronSecond extends CronEntity implements CronPart {
     }
   }
 
+  @override
   String toReadableString() {
     switch (type) {
       case CronSecondType.EVERY:
@@ -134,6 +138,7 @@ class CronSecond extends CronEntity implements CronPart {
     }
   }
 
+  @override
   bool validate(String part) {
     return true;
   }

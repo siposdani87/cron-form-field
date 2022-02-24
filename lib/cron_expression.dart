@@ -1,12 +1,11 @@
-import 'src/day_of_month.dart';
-import 'src/day_of_week.dart';
-
-import 'src/cron_day.dart';
-import 'src/cron_hour.dart';
-import 'src/cron_minute.dart';
-import 'src/cron_month.dart';
-import 'src/cron_second.dart';
-import 'src/cron_year.dart';
+import 'package:cron_form_field/src/day_of_month.dart';
+import 'package:cron_form_field/src/day_of_week.dart';
+import 'package:cron_form_field/src/cron_day.dart';
+import 'package:cron_form_field/src/cron_hour.dart';
+import 'package:cron_form_field/src/cron_minute.dart';
+import 'package:cron_form_field/src/cron_month.dart';
+import 'package:cron_form_field/src/cron_second.dart';
+import 'package:cron_form_field/src/cron_year.dart';
 
 enum CronExpressionType { STANDARD, QUARTZ }
 
@@ -81,6 +80,7 @@ class CronExpression {
     year.reset();
   }
 
+  @override
   String toString() {
     return [
       second.toString(),

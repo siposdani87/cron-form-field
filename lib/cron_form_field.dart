@@ -7,7 +7,7 @@ library cron_form_field;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'src/cron_picker_dialog.dart';
+import 'package:cron_form_field/src/cron_picker_dialog.dart';
 
 /// A [CronFormField] that contains a [TextField].
 ///
@@ -261,7 +261,7 @@ class CronFormField extends FormField<String> {
                   labelText: labelText,
                   icon: icon,
                   hintText: hintText,
-                  suffixIcon: Icon(Icons.arrow_drop_down),
+                  suffixIcon: const Icon(Icons.arrow_drop_down),
                 );
             effectiveDecoration.applyDefaults(
               Theme.of(state.context).inputDecorationTheme,
@@ -375,10 +375,10 @@ class _CronFormFieldState extends FormFieldState<String> {
       context: context,
       builder: (BuildContext context) {
         return CronPickerDialog(
-          _controller.text,
-          widget.dialogTitle ?? widget.labelText,
-          widget.dialogDoneText,
-          widget.dialogCancelText,
+          value: _controller.text,
+          title: widget.dialogTitle ?? widget.labelText,
+          btnDoneText: widget.dialogDoneText,
+          btnCancelText: widget.dialogCancelText,
         );
       },
     );
