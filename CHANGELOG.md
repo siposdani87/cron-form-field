@@ -1,6 +1,7 @@
 ## 0.3.1 - 2022-02-25
 
 * Fix index of dayOfWeek and month values
+* Rename parent var to cronDay
 
 ## 0.3.0 - 2022-02-24
 

@@ -5,7 +5,7 @@ import 'package:cron_form_field/src/enums/cron_day_type.dart';
 import 'package:cron_form_field/src/cron_part.dart';
 
 class DayOfMonth extends CronEntity implements CronPart {
-  CronDay parent;
+  CronDay cronDay;
   late int everyDay;
   late int? everyStartDay;
   late List<int> specificMonthDays;
@@ -13,13 +13,13 @@ class DayOfMonth extends CronEntity implements CronPart {
   late int nearestWeekday;
   late int dayBefore;
 
-  DayOfMonth(String originalValue, this.parent) : super(originalValue) {
+  DayOfMonth(String originalValue, this.cronDay) : super(originalValue) {
     setDefaults();
     _setValue(originalValue);
   }
 
-  factory DayOfMonth.fromString(String dayOfMonthExpression, CronDay parent) {
-    return DayOfMonth(dayOfMonthExpression, parent);
+  factory DayOfMonth.fromString(String dayOfMonthExpression, CronDay cronDay) {
+    return DayOfMonth(dayOfMonthExpression, cronDay);
   }
 
   @override
@@ -35,49 +35,49 @@ class DayOfMonth extends CronEntity implements CronPart {
 
   @override
   void reset() {
-    parent.type = CronDayType.EVERY_MONTH;
+    cronDay.type = CronDayType.EVERY_MONTH;
     setDefaults();
   }
 
   void setEveryMonth() {
-    parent.type = CronDayType.EVERY_MONTH;
+    cronDay.type = CronDayType.EVERY_MONTH;
   }
 
   void setEveryStartAtMonth(int day, int? startDay) {
-    parent.type = CronDayType.EVERY_START_AT_MONTH;
+    cronDay.type = CronDayType.EVERY_START_AT_MONTH;
     everyDay = day;
     everyStartDay = startDay;
   }
 
   void setSpecificDayOfMonth(List<int> days) {
-    parent.type = CronDayType.SPECIFIC_DAY_OF_MONTH;
+    cronDay.type = CronDayType.SPECIFIC_DAY_OF_MONTH;
     specificMonthDays = days;
   }
 
   void setLastDayOfMonth(int day) {
-    parent.type = CronDayType.LAST_DAY_OF_MONTH;
+    cronDay.type = CronDayType.LAST_DAY_OF_MONTH;
     lastDay = day;
   }
 
   void setNearestWeekdayOfMonth(int day) {
-    parent.type = CronDayType.NEAREST_WEEKDAY_OF_MONTH;
+    cronDay.type = CronDayType.NEAREST_WEEKDAY_OF_MONTH;
     nearestWeekday = day;
   }
 
   void setDayBeforeEndOfMonth(int day) {
-    parent.type = CronDayType.DAY_BEFORE_END_OF_MONTH;
+    cronDay.type = CronDayType.DAY_BEFORE_END_OF_MONTH;
     dayBefore = day;
   }
 
   void setLastWeekdayOfMonth() {
-    parent.type = CronDayType.LAST_WEEKDAY_OF_MONTH;
+    cronDay.type = CronDayType.LAST_WEEKDAY_OF_MONTH;
   }
 
   void _setValue(String value) {
     if (!validate(value)) {
       throw ArgumentError('Invalid day of month part of expression!');
     }
-    switch (parent.type) {
+    switch (cronDay.type) {
       case CronDayType.EVERY_WEEK:
         break;
       case CronDayType.EVERY_MONTH:
@@ -132,7 +132,7 @@ class DayOfMonth extends CronEntity implements CronPart {
 
   @override
   String toString() {
-    switch (parent.type) {
+    switch (cronDay.type) {
       case CronDayType.EVERY_WEEK:
         return '?';
       case CronDayType.EVERY_MONTH:
@@ -162,7 +162,7 @@ class DayOfMonth extends CronEntity implements CronPart {
 
   @override
   String toReadableString() {
-    switch (parent.type) {
+    switch (cronDay.type) {
       case CronDayType.EVERY_WEEK:
         return '';
       case CronDayType.EVERY_MONTH:
