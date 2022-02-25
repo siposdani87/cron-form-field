@@ -17,17 +17,14 @@ class CronYear extends CronEntity implements CronPart {
     _setValue(originalValue);
   }
 
-  factory CronYear.fromString(String? yearExpression) {
-    return CronYear(yearExpression);
-  }
-
   @override
   void setDefaults() {
+    // 2021
     everyYear = null;
     everyStartYear = null;
-    specificYears = [currentYear];
-    betweenStartYear = 0;
-    betweenEndYear = 0;
+    specificYears = [startIndex];
+    betweenStartYear = startIndex;
+    betweenEndYear = startIndex;
   }
 
   @override
@@ -40,7 +37,7 @@ class CronYear extends CronEntity implements CronPart {
     type = CronYearType.EVERY;
   }
 
-  void setEveryYearStartAt(int? year, int? startYear) {
+  void setEveryYearStartAt(int? year, [int? startYear]) {
     type = CronYearType.EVERY_START_AT;
     everyYear = year;
     everyStartYear = startYear;
@@ -110,7 +107,7 @@ class CronYear extends CronEntity implements CronPart {
         return '${everyStartYear ?? '*'}/${everyYear ?? '1'}';
       case CronYearType.SPECIFIC:
         return specificYears.isEmpty
-            ? currentYear.toString()
+            ? startIndex.toString()
             : specificYears.join(',');
       case CronYearType.BETWEEN:
         return '$betweenStartYear-$betweenEndYear';
@@ -126,12 +123,12 @@ class CronYear extends CronEntity implements CronPart {
         return '';
       case CronYearType.EVERY_START_AT:
         var year = everyYear ?? 1;
-        var startYear = everyStartYear ?? currentYear;
+        var startYear = everyStartYear ?? startIndex;
         return year > 1
             ? 'every $year years starting in $startYear'
             : 'starting in $startYear';
       case CronYearType.SPECIFIC:
-        var years = specificYears.isEmpty ? [currentYear] : specificYears;
+        var years = specificYears.isEmpty ? [startIndex] : specificYears;
         return years.length == 1
             ? 'in ${years[0]}'
             : 'in ${years.getRange(0, years.length - 2).join(', ')} and ${years.last}';
@@ -145,5 +142,10 @@ class CronYear extends CronEntity implements CronPart {
   @override
   bool validate(String part) {
     return true;
+  }
+
+  @override
+  int get startIndex {
+    return currentYear;
   }
 }

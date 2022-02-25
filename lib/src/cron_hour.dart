@@ -16,17 +16,14 @@ class CronHour extends CronEntity implements CronPart {
     _setValue(originalValue);
   }
 
-  factory CronHour.fromString(String hourExpression) {
-    return CronHour(hourExpression);
-  }
-
   @override
   void setDefaults() {
+    // 0-23
     everyHour = 1;
     everyStartHour = null;
-    specificHours = [0]; // 0-23
-    betweenStartHour = 0;
-    betweenEndHour = 0;
+    specificHours = [startIndex];
+    betweenStartHour = startIndex;
+    betweenEndHour = startIndex;
   }
 
   @override
@@ -39,7 +36,7 @@ class CronHour extends CronEntity implements CronPart {
     type = CronHourType.EVERY;
   }
 
-  void setEveryHourStartAt(int hour, int? startHour) {
+  void setEveryHourStartAt(int hour, [int? startHour]) {
     type = CronHourType.EVERY_START_AT;
     everyHour = hour;
     everyStartHour = startHour;
@@ -100,7 +97,7 @@ class CronHour extends CronEntity implements CronPart {
       case CronHourType.EVERY_START_AT:
         return '${everyStartHour ?? '*'}/$everyHour';
       case CronHourType.SPECIFIC:
-        return (specificHours.isEmpty ? [0] : specificHours).join(',');
+        return (specificHours.isEmpty ? [startIndex] : specificHours).join(',');
       case CronHourType.BETWEEN:
         return '$betweenStartHour-$betweenEndHour';
     }
@@ -117,7 +114,7 @@ class CronHour extends CronEntity implements CronPart {
             ? 'every $everyHour hours starting at $startHour'
             : 'every $everyHour hours';
       case CronHourType.SPECIFIC:
-        var hours = specificHours.isEmpty ? [0] : specificHours;
+        var hours = specificHours.isEmpty ? [startIndex] : specificHours;
         return hours.length == 1
             ? 'at hour ${hours[0]}'
             : 'at hours ${hours.getRange(0, hours.length - 2).join(', ')} and ${hours.last}';
@@ -135,5 +132,10 @@ class CronHour extends CronEntity implements CronPart {
     return rangeListToMap(generateRangeList(0, 24), converter: (int num) {
       return num.toString().padLeft(2, '0');
     });
+  }
+
+  @override
+  int get startIndex {
+    return 0;
   }
 }

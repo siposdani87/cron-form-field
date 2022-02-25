@@ -9,4 +9,6 @@ abstract class CronPart {
   String toReadableString();
 
   bool validate(String part);
+
+  int get startIndex;
 }

@@ -56,7 +56,7 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
               child: _minutesPanel(),
               onOpen: () {
                 _cronExpression.reset();
-                _cronExpression.minute.setEveryMinuteStartAt(1, null);
+                _cronExpression.minute.setEveryMinuteStartAt(1);
               },
             ),
             _expansionPanel(
@@ -65,9 +65,11 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
               child: _hourlyPanel(),
               onOpen: () {
                 _cronExpression.reset();
-                _cronExpression.second.setSpecificSeconds([0]);
-                _cronExpression.minute.setSpecificMinutes([0]);
-                _cronExpression.hour.setEveryHourStartAt(1, null);
+                _cronExpression.second
+                    .setSpecificSeconds([_cronExpression.second.startIndex]);
+                _cronExpression.minute
+                    .setSpecificMinutes([_cronExpression.minute.startIndex]);
+                _cronExpression.hour.setEveryHourStartAt(1);
                 _cronExpression.dayOfMonth.setEveryStartAtMonth(1, 1);
               },
             ),
@@ -77,9 +79,12 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
               child: _dailyPanel(),
               onOpen: () {
                 _cronExpression.reset();
-                _cronExpression.second.setSpecificSeconds([0]);
-                _cronExpression.minute.setSpecificMinutes([0]);
-                _cronExpression.hour.setSpecificHours([0]);
+                _cronExpression.second
+                    .setSpecificSeconds([_cronExpression.second.startIndex]);
+                _cronExpression.minute
+                    .setSpecificMinutes([_cronExpression.minute.startIndex]);
+                _cronExpression.hour
+                    .setSpecificHours([_cronExpression.hour.startIndex]);
                 _cronExpression.dayOfMonth.setEveryStartAtMonth(1, 1);
               },
             ),
@@ -89,10 +94,15 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
               child: _weeklyPanel(),
               onOpen: () {
                 _cronExpression.reset();
-                _cronExpression.second.setSpecificSeconds([0]);
-                _cronExpression.minute.setSpecificMinutes([0]);
-                _cronExpression.hour.setSpecificHours([0]);
-                _cronExpression.dayOfWeek.setSpecificDayOfWeek([0]);
+                _cronExpression.second
+                    .setSpecificSeconds([_cronExpression.second.startIndex]);
+                _cronExpression.minute
+                    .setSpecificMinutes([_cronExpression.minute.startIndex]);
+                _cronExpression.hour
+                    .setSpecificHours([_cronExpression.hour.startIndex]);
+                _cronExpression.dayOfWeek.setSpecificDayOfWeek(
+                  [_cronExpression.dayOfWeek.startIndex],
+                );
               },
             ),
             _expansionPanel(
@@ -101,11 +111,15 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
               child: _monthlyPanel(),
               onOpen: () {
                 _cronExpression.reset();
-                _cronExpression.second.setSpecificSeconds([0]);
-                _cronExpression.minute.setSpecificMinutes([0]);
-                _cronExpression.hour.setSpecificHours([0]);
-                _cronExpression.dayOfWeek.setXthDayOfMonth(0, 1);
-                _cronExpression.month.setEveryMonthStartAt(1, null);
+                _cronExpression.second
+                    .setSpecificSeconds([_cronExpression.second.startIndex]);
+                _cronExpression.minute
+                    .setSpecificMinutes([_cronExpression.minute.startIndex]);
+                _cronExpression.hour
+                    .setSpecificHours([_cronExpression.hour.startIndex]);
+                _cronExpression.dayOfWeek
+                    .setXthDayOfMonth(_cronExpression.dayOfWeek.startIndex, 1);
+                _cronExpression.month.setEveryMonthStartAt(1);
               },
             ),
             _expansionPanel(
@@ -114,11 +128,16 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
               child: _yearlyPanel(),
               onOpen: () {
                 _cronExpression.reset();
-                _cronExpression.second.setSpecificSeconds([0]);
-                _cronExpression.minute.setSpecificMinutes([0]);
-                _cronExpression.hour.setSpecificHours([0]);
-                _cronExpression.dayOfWeek.setXthDayOfMonth(0, 1);
-                _cronExpression.month.setSpecificMonths([1]);
+                _cronExpression.second
+                    .setSpecificSeconds([_cronExpression.second.startIndex]);
+                _cronExpression.minute
+                    .setSpecificMinutes([_cronExpression.minute.startIndex]);
+                _cronExpression.hour
+                    .setSpecificHours([_cronExpression.hour.startIndex]);
+                _cronExpression.dayOfWeek
+                    .setXthDayOfMonth(_cronExpression.dayOfWeek.startIndex, 1);
+                _cronExpression.month
+                    .setSpecificMonths([_cronExpression.month.startIndex]);
               },
             ),
           ],

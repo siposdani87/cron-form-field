@@ -7,17 +7,18 @@ import 'package:cron_form_field/src/cron_month.dart';
 import 'package:cron_form_field/src/cron_second.dart';
 import 'package:cron_form_field/src/cron_year.dart';
 import 'package:cron_form_field/src/enums/cron_expression_output_format.dart';
+import 'package:cron_form_field/src/enums/cron_expression_type.dart';
 
-enum CronExpressionType { STANDARD, QUARTZ }
+export 'package:cron_form_field/src/enums/cron_expression_type.dart';
 
 class CronExpression {
-  CronExpressionType type;
   CronSecond second;
   CronMinute minute;
   CronHour hour;
   CronDay _day;
   CronMonth month;
   CronYear year;
+  CronExpressionType type;
 
   CronExpression(
     this.second,
@@ -45,23 +46,25 @@ class CronExpression {
     }
 
     return CronExpression(
-      CronSecond.fromString(
+      CronSecond(
         expressionParts[0].isEmpty ? null : expressionParts[0],
       ),
-      CronMinute.fromString(
+      CronMinute(
         expressionParts[1],
       ),
-      CronHour.fromString(
+      CronHour(
         expressionParts[2],
       ),
-      CronDay.fromString(
+      CronDay(
         expressionParts[3],
         expressionParts[5],
+        expressionType,
       ),
-      CronMonth.fromString(
+      CronMonth(
         expressionParts[4],
+        expressionType,
       ),
-      CronYear.fromString(
+      CronYear(
         expressionParts[6].isEmpty ? null : expressionParts[6],
       ),
       expressionType,

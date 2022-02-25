@@ -2,6 +2,7 @@
 
 * Fix index of dayOfWeek and month values
 * Rename parent var to cronDay
+* Improve QUARTZ and STANDARD cron handlers
 
 ## 0.3.0 - 2022-02-24
 

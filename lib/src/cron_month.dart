@@ -3,6 +3,7 @@ import 'package:cron_form_field/src/util.dart';
 import 'package:cron_form_field/src/cron_entity.dart';
 import 'package:cron_form_field/src/cron_part.dart';
 import 'package:cron_form_field/src/enums/cron_month_type.dart';
+import 'package:cron_form_field/src/enums/cron_expression_type.dart';
 
 class CronMonth extends CronEntity implements CronPart {
   late CronMonthType type;
@@ -12,23 +13,21 @@ class CronMonth extends CronEntity implements CronPart {
   late int betweenStartMonth;
   late int betweenEndMonth;
   bool useAlternativeValue = false;
+  CronExpressionType expressionType;
 
-  CronMonth(String originalValue) : super(originalValue) {
+  CronMonth(String originalValue, this.expressionType) : super(originalValue) {
     setDefaults();
     _setValue(originalValue);
   }
 
-  factory CronMonth.fromString(String monthExpression) {
-    return CronMonth(monthExpression);
-  }
-
   @override
   void setDefaults() {
+    // 1-12, JAN-DEC, (0-11)
     everyMonth = 1;
     everyStartMonth = null;
-    specificMonths = [1]; // (0-11), 1-12, JAN-DEC
-    betweenStartMonth = 0;
-    betweenEndMonth = 0;
+    specificMonths = [startIndex];
+    betweenStartMonth = startIndex;
+    betweenEndMonth = startIndex;
   }
 
   @override
@@ -41,7 +40,7 @@ class CronMonth extends CronEntity implements CronPart {
     type = CronMonthType.EVERY;
   }
 
-  void setEveryMonthStartAt(int month, int? startMonth) {
+  void setEveryMonthStartAt(int month, [int? startMonth]) {
     type = CronMonthType.EVERY_START_AT;
     everyMonth = month;
     everyStartMonth = startMonth;
@@ -110,7 +109,7 @@ class CronMonth extends CronEntity implements CronPart {
       case CronMonthType.EVERY_START_AT:
         return '${everyStartMonth ?? '*'}/$everyMonth';
       case CronMonthType.SPECIFIC:
-        return (specificMonths.isEmpty ? [0] : specificMonths)
+        return (specificMonths.isEmpty ? [startIndex] : specificMonths)
             .map((v) => convertAlternativeValue(
                   outputFormat.isAlternative(useAlternativeValue),
                   v,
@@ -134,7 +133,7 @@ class CronMonth extends CronEntity implements CronPart {
             ? 'every $everyMonth months starting at $startMonth'
             : 'every $everyMonth months';
       case CronMonthType.SPECIFIC:
-        var months = (specificMonths.isEmpty ? [0] : specificMonths)
+        var months = (specificMonths.isEmpty ? [startIndex] : specificMonths)
             .map((v) => convertAlternativeValue(true, v, getMonthMap()))
             .toList();
         return months.length == 1
@@ -155,12 +154,26 @@ class CronMonth extends CronEntity implements CronPart {
   }
 
   Map<int, String> getMonthMap() {
-    return _getMonthMap(1);
-  }
-
-  Map<int, String> _getMonthMap(int startIndex) {
-    final List<String> monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEC'];
+    final List<String> monthNames = [
+      'JAN',
+      'FEB',
+      'MAR',
+      'APR',
+      'MAY',
+      'JUN',
+      'JUL',
+      'AUG',
+      'SEP',
+      'OKT',
+      'NOV',
+      'DEC',
+    ];
 
     return getMapFromIndex(monthNames, startIndex);
+  }
+
+  @override
+  int get startIndex {
+    return expressionType == CronExpressionType.STANDARD ? 1 : 0;
   }
 }
