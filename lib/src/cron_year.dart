@@ -74,7 +74,7 @@ class CronYear extends CronEntity implements CronPart {
         everyYear = parts[1] == '*' ? null : int.parse(parts[1]);
         break;
       case CronYearType.SPECIFIC:
-        specificYears = value.split(',').map((e) => int.parse(e)).toList();
+        specificYears = value.split(',').map((v) => int.parse(v)).toList();
         break;
       case CronYearType.BETWEEN:
         var parts = value.split('-');

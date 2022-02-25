@@ -22,10 +22,9 @@ class CronHour extends CronEntity implements CronPart {
 
   @override
   void setDefaults() {
-    // 0-23
     everyHour = 1;
     everyStartHour = null;
-    specificHours = [0];
+    specificHours = [0]; // 0-23
     betweenStartHour = 0;
     betweenEndHour = 0;
   }
@@ -71,7 +70,7 @@ class CronHour extends CronEntity implements CronPart {
         everyHour = int.parse(parts[1]);
         break;
       case CronHourType.SPECIFIC:
-        specificHours = value.split(',').map((e) => int.parse(e)).toList();
+        specificHours = value.split(',').map((v) => int.parse(v)).toList();
         break;
       case CronHourType.BETWEEN:
         var parts = value.split('-');
