@@ -21,10 +21,9 @@ class CronSecond extends CronEntity implements CronPart {
 
   @override
   void setDefaults() {
-    // 0-59
     everySecond = 1;
     everyStartSecond = null;
-    specificSeconds = [0];
+    specificSeconds = [0]; // 0-59
     betweenStartSecond = 0;
     betweenEndSecond = 0;
   }
@@ -73,7 +72,7 @@ class CronSecond extends CronEntity implements CronPart {
         everySecond = int.parse(parts[1]);
         break;
       case CronSecondType.SPECIFIC:
-        specificSeconds = value.split(',').map((e) => int.parse(e)).toList();
+        specificSeconds = value.split(',').map((v) => int.parse(v)).toList();
         break;
       case CronSecondType.BETWEEN:
         var parts = value.split('-');

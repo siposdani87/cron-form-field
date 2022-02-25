@@ -26,10 +26,9 @@ class DayOfWeek extends CronEntity implements CronPart {
 
   @override
   void setDefaults() {
-    // 0-6, SUN-SAT
     everyDay = 1;
     everyStartDay = null;
-    specificWeekdays = [0];
+    specificWeekdays = [0]; // (1-7), 0-6, SUN-SAT
     xthWeekday = 0;
     xthWeeks = 1;
     lastDay = null;
@@ -97,7 +96,7 @@ class DayOfWeek extends CronEntity implements CronPart {
       case CronDayType.SPECIFIC_DAY_OF_WEEK:
         specificWeekdays = value
             .split(',')
-            .map((e) => parseAlternativeValue(e, getWeekdayMap()))
+            .map((v) => parseAlternativeValue(v, getWeekdayMap()))
             .toList();
         break;
       case CronDayType.SPECIFIC_DAY_OF_MONTH:
@@ -151,9 +150,9 @@ class DayOfWeek extends CronEntity implements CronPart {
         return '?';
       case CronDayType.SPECIFIC_DAY_OF_WEEK:
         return (specificWeekdays.isEmpty ? [0] : specificWeekdays)
-            .map((e) => convertAlternativeValue(
+            .map((v) => convertAlternativeValue(
                   outputFormat.isAlternative(useAlternativeValue),
-                  e,
+                  v,
                   getWeekdayMap(),
                 ))
             .toList()
@@ -191,9 +190,9 @@ class DayOfWeek extends CronEntity implements CronPart {
         return '';
       case CronDayType.SPECIFIC_DAY_OF_WEEK:
         var days = (specificWeekdays.isEmpty ? [0] : specificWeekdays)
-            .map((e) => convertAlternativeValue(
+            .map((v) => convertAlternativeValue(
                   true,
-                  e,
+                  v,
                   getWeekdayMap(),
                 ))
             .toList();

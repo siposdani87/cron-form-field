@@ -24,10 +24,9 @@ class CronMonth extends CronEntity implements CronPart {
 
   @override
   void setDefaults() {
-    // 1-12, JAN-DEC
     everyMonth = 1;
     everyStartMonth = null;
-    specificMonths = [1];
+    specificMonths = [1]; // (0-11), 1-12, JAN-DEC
     betweenStartMonth = 0;
     betweenEndMonth = 0;
   }
@@ -76,7 +75,7 @@ class CronMonth extends CronEntity implements CronPart {
       case CronMonthType.SPECIFIC:
         specificMonths = value
             .split(',')
-            .map((e) => parseAlternativeValue(e, getMonthMap()))
+            .map((v) => parseAlternativeValue(v, getMonthMap()))
             .toList();
         break;
       case CronMonthType.BETWEEN:
@@ -112,9 +111,9 @@ class CronMonth extends CronEntity implements CronPart {
         return '${everyStartMonth ?? '*'}/$everyMonth';
       case CronMonthType.SPECIFIC:
         return (specificMonths.isEmpty ? [0] : specificMonths)
-            .map((e) => convertAlternativeValue(
+            .map((v) => convertAlternativeValue(
                   outputFormat.isAlternative(useAlternativeValue),
-                  e,
+                  v,
                   getMonthMap(),
                 ))
             .toList()
@@ -136,7 +135,7 @@ class CronMonth extends CronEntity implements CronPart {
             : 'every $everyMonth months';
       case CronMonthType.SPECIFIC:
         var months = (specificMonths.isEmpty ? [0] : specificMonths)
-            .map((e) => convertAlternativeValue(true, e, getMonthMap()))
+            .map((v) => convertAlternativeValue(true, v, getMonthMap()))
             .toList();
         return months.length == 1
             ? 'at month ${months[0]}'

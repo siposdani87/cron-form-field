@@ -24,10 +24,9 @@ class DayOfMonth extends CronEntity implements CronPart {
 
   @override
   void setDefaults() {
-    // 1-31
     everyDay = 1;
     everyStartDay = null;
-    specificMonthDays = [1];
+    specificMonthDays = [1]; // 1-31
     lastDay = null;
     nearestWeekday = 1;
     dayBefore = 1;
@@ -92,7 +91,7 @@ class DayOfMonth extends CronEntity implements CronPart {
       case CronDayType.SPECIFIC_DAY_OF_WEEK:
         break;
       case CronDayType.SPECIFIC_DAY_OF_MONTH:
-        specificMonthDays = value.split(',').map((e) => int.parse(e)).toList();
+        specificMonthDays = value.split(',').map((v) => int.parse(v)).toList();
         break;
       case CronDayType.LAST_DAY_OF_MONTH:
         lastDay = value.length == 1 ? null : int.parse(value.split('L')[0]);
