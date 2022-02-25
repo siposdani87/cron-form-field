@@ -18,15 +18,12 @@ class DayOfMonth extends CronEntity implements CronPart {
     _setValue(originalValue);
   }
 
-  factory DayOfMonth.fromString(String dayOfMonthExpression, CronDay cronDay) {
-    return DayOfMonth(dayOfMonthExpression, cronDay);
-  }
-
   @override
   void setDefaults() {
+    // 1-31
     everyDay = 1;
     everyStartDay = null;
-    specificMonthDays = [1]; // 1-31
+    specificMonthDays = [startIndex];
     lastDay = null;
     nearestWeekday = 1;
     dayBefore = 1;
@@ -42,7 +39,7 @@ class DayOfMonth extends CronEntity implements CronPart {
     cronDay.type = CronDayType.EVERY_MONTH;
   }
 
-  void setEveryStartAtMonth(int day, int? startDay) {
+  void setEveryStartAtMonth(int day, [int? startDay]) {
     cronDay.type = CronDayType.EVERY_START_AT_MONTH;
     everyDay = day;
     everyStartDay = startDay;
@@ -143,7 +140,8 @@ class DayOfMonth extends CronEntity implements CronPart {
       case CronDayType.SPECIFIC_DAY_OF_WEEK:
         return '?';
       case CronDayType.SPECIFIC_DAY_OF_MONTH:
-        return (specificMonthDays.isEmpty ? [1] : specificMonthDays).join(',');
+        return (specificMonthDays.isEmpty ? [startIndex] : specificMonthDays)
+            .join(',');
       case CronDayType.LAST_DAY_OF_MONTH:
         return '${lastDay ?? ''}L';
       case CronDayType.LAST_WEEKDAY_OF_MONTH:
@@ -176,7 +174,7 @@ class DayOfMonth extends CronEntity implements CronPart {
       case CronDayType.SPECIFIC_DAY_OF_WEEK:
         return '?';
       case CronDayType.SPECIFIC_DAY_OF_MONTH:
-        var days = specificMonthDays.isEmpty ? [0] : specificMonthDays;
+        var days = specificMonthDays.isEmpty ? [startIndex] : specificMonthDays;
         return days.length == 1
             ? 'on the ${serialNumberName(days[0])} day'
             : 'on the ${days.getRange(0, days.length - 2).join(', ')} and ${days.last} day';
@@ -202,5 +200,10 @@ class DayOfMonth extends CronEntity implements CronPart {
 
   Map<int, String> getDayMap() {
     return rangeListToMap(generateRangeList(1, 32));
+  }
+
+  @override
+  int get startIndex {
+    return 1;
   }
 }

@@ -2,7 +2,30 @@ import 'package:test/test.dart';
 import 'package:cron_form_field/cron_expression.dart';
 
 void main() {
-  group('CronExpression', () {
+  group('Standard CronExpressions', () {
+    test('Parse every minute without second and year', () {
+      var expression = '* * * * *';
+      expect(CronExpression.fromString(expression).toString(), expression);
+    });
+
+    test('Parse at minute 5, at hour 0, at month AUG', () {
+      var expression = '5 0 * 8 *';
+      expect(CronExpression.fromString(expression).toString(), expression);
+    });
+
+    test('Parse at minute 5, at hour 4, on the SUN day', () {
+      var expression = '5 4 * * SUN';
+      expect(CronExpression.fromString(expression).toString(), expression);
+    });
+
+    test('Parse at minute 0, at hours and 12, on the 1st day, every 2 months', () {
+      var expression = '0 0,12 1 */2 *';
+      expect(CronExpression.fromString(expression).toString(), expression);
+    });
+
+  },);
+
+  group('Quartz CronExpressions', () {
     test('Parse every minute without second and year', () {
       var expression = '* * ? * *';
       expect(CronExpression.fromString(expression).toString(), expression);

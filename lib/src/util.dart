@@ -1,7 +1,7 @@
 bool isAlternativeValue(String value, Map<int, String> map) {
   var result = false;
   for (var entity in map.values) {
-    if (value.contains(entity)) {
+    if (value.toUpperCase().contains(entity)) {
       result = true;
     }
   }
@@ -14,7 +14,7 @@ int parseAlternativeValue(String value, Map<int, String> map) {
   if (num != null) {
     return num;
   }
-  var result = value;
+  var result = value.toUpperCase();
   var entities = map.keys.toList()..sort((a, b) => b.compareTo(a));
   for (var key in entities) {
     result = result.replaceAll(map[key]!, key.toString());
@@ -26,13 +26,13 @@ int parseAlternativeValue(String value, Map<int, String> map) {
 String convertAlternativeValue(
   bool isAlternative,
   int value,
-  Map<int, String> map,
+  Map<int, String> valueMap,
 ) {
   if (!isAlternative) {
     return value.toString();
   }
 
-  return map[value].toString();
+  return valueMap[value].toString();
 }
 
 Map<int, String> rangeListToMap(
@@ -95,7 +95,7 @@ Map<int, String> getMapFromIndex(List<String> entities, int startIndex) {
     results.addAll({
       index: entity,
     });
-    index ++;
+    index++;
   }
 
   return results;

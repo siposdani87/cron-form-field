@@ -16,17 +16,14 @@ class CronMinute extends CronEntity implements CronPart {
     _setValue(originalValue);
   }
 
-  factory CronMinute.fromString(String minuteExpression) {
-    return CronMinute(minuteExpression);
-  }
-
   @override
   void setDefaults() {
+    // 0-59
     everyMinute = 1;
     everyStartMinute = null;
-    specificMinutes = [0]; // 0-59
-    betweenStartMinute = 0;
-    betweenEndMinute = 0;
+    specificMinutes = [startIndex];
+    betweenStartMinute = startIndex;
+    betweenEndMinute = startIndex;
   }
 
   @override
@@ -39,7 +36,7 @@ class CronMinute extends CronEntity implements CronPart {
     type = CronMinuteType.EVERY;
   }
 
-  void setEveryMinuteStartAt(int minute, int? startMinute) {
+  void setEveryMinuteStartAt(int minute, [int? startMinute]) {
     type = CronMinuteType.EVERY_START_AT;
     everyMinute = minute;
     everyStartMinute = startMinute;
@@ -100,7 +97,8 @@ class CronMinute extends CronEntity implements CronPart {
       case CronMinuteType.EVERY_START_AT:
         return '${everyStartMinute ?? '*'}/$everyMinute';
       case CronMinuteType.SPECIFIC:
-        return (specificMinutes.isEmpty ? [0] : specificMinutes).join(',');
+        return (specificMinutes.isEmpty ? [startIndex] : specificMinutes)
+            .join(',');
       case CronMinuteType.BETWEEN:
         return '$betweenStartMinute-$betweenEndMinute';
     }
@@ -117,7 +115,7 @@ class CronMinute extends CronEntity implements CronPart {
             ? 'every $everyMinute minutes starting at $startMinute'
             : 'every $everyMinute minutes';
       case CronMinuteType.SPECIFIC:
-        var minutes = specificMinutes.isEmpty ? [0] : specificMinutes;
+        var minutes = specificMinutes.isEmpty ? [startIndex] : specificMinutes;
         return minutes.length == 1
             ? 'at minute ${minutes[0]}'
             : 'at minutes ${minutes.getRange(0, minutes.length - 2).join(', ')} and ${minutes.last}';
@@ -139,5 +137,10 @@ class CronMinute extends CronEntity implements CronPart {
     return rangeListToMap(generateRangeList(0, 60), converter: (int num) {
       return num.toString().padLeft(2, '0');
     });
+  }
+
+  @override
+  int get startIndex {
+    return 0;
   }
 }

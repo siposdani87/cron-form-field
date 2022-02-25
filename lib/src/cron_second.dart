@@ -15,17 +15,14 @@ class CronSecond extends CronEntity implements CronPart {
     _setValue(originalValue);
   }
 
-  factory CronSecond.fromString(String? secondExpression) {
-    return CronSecond(secondExpression);
-  }
-
   @override
   void setDefaults() {
+    // 0-59
     everySecond = 1;
     everyStartSecond = null;
-    specificSeconds = [0]; // 0-59
-    betweenStartSecond = 0;
-    betweenEndSecond = 0;
+    specificSeconds = [startIndex];
+    betweenStartSecond = startIndex;
+    betweenEndSecond = startIndex;
   }
 
   @override
@@ -38,7 +35,7 @@ class CronSecond extends CronEntity implements CronPart {
     type = CronSecondType.EVERY;
   }
 
-  void setEverySecondStartAt(int second, int? startSecond) {
+  void setEverySecondStartAt(int second, [int? startSecond]) {
     type = CronSecondType.EVERY_START_AT;
     everySecond = second;
     everyStartSecond = startSecond;
@@ -107,7 +104,8 @@ class CronSecond extends CronEntity implements CronPart {
       case CronSecondType.EVERY_START_AT:
         return '${everyStartSecond ?? '*'}/$everySecond';
       case CronSecondType.SPECIFIC:
-        return (specificSeconds.isEmpty ? [0] : specificSeconds).join(',');
+        return (specificSeconds.isEmpty ? [startIndex] : specificSeconds)
+            .join(',');
       case CronSecondType.BETWEEN:
         return '$betweenStartSecond-$betweenEndSecond';
       case CronSecondType.NONE:
@@ -126,7 +124,7 @@ class CronSecond extends CronEntity implements CronPart {
             ? 'every $everySecond seconds starting at $startSecond'
             : 'every $everySecond seconds';
       case CronSecondType.SPECIFIC:
-        var seconds = specificSeconds.isEmpty ? [0] : specificSeconds;
+        var seconds = specificSeconds.isEmpty ? [startIndex] : specificSeconds;
         return seconds.length == 1
             ? 'at second ${seconds[0]}'
             : 'at seconds ${seconds.getRange(0, seconds.length - 2).join(', ')} and ${seconds.last}';
@@ -140,5 +138,10 @@ class CronSecond extends CronEntity implements CronPart {
   @override
   bool validate(String part) {
     return true;
+  }
+
+  @override
+  int get startIndex {
+    return 0;
   }
 }

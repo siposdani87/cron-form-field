@@ -1,4 +1,5 @@
 import 'package:cron_form_field/src/enums/cron_expression_output_format.dart';
+import 'package:cron_form_field/src/enums/cron_expression_type.dart';
 import 'package:cron_form_field/src/util.dart';
 import 'package:cron_form_field/src/cron_day.dart';
 import 'package:cron_form_field/src/enums/cron_day_type.dart';
@@ -20,16 +21,13 @@ class DayOfWeek extends CronEntity implements CronPart {
     _setValue(originalValue);
   }
 
-  factory DayOfWeek.fromString(String dayOfWeekExpression, CronDay cronDay) {
-    return DayOfWeek(dayOfWeekExpression, cronDay);
-  }
-
   @override
   void setDefaults() {
+    // 0-6, SUN-SAT, (1-7)
     everyDay = 1;
     everyStartDay = null;
-    specificWeekdays = [0]; // (1-7), 0-6, SUN-SAT
-    xthWeekday = 0;
+    specificWeekdays = [startIndex];
+    xthWeekday = startIndex;
     xthWeeks = 1;
     lastDay = null;
   }
@@ -44,7 +42,7 @@ class DayOfWeek extends CronEntity implements CronPart {
     cronDay.type = CronDayType.EVERY_WEEK;
   }
 
-  void setEveryStartAtWeek(int day, int? startDay) {
+  void setEveryStartAtWeek(int day, [int? startDay]) {
     cronDay.type = CronDayType.EVERY_START_AT_WEEK;
     everyDay = day;
     everyStartDay = startDay;
@@ -149,7 +147,7 @@ class DayOfWeek extends CronEntity implements CronPart {
       case CronDayType.EVERY_START_AT_MONTH:
         return '?';
       case CronDayType.SPECIFIC_DAY_OF_WEEK:
-        return (specificWeekdays.isEmpty ? [0] : specificWeekdays)
+        return (specificWeekdays.isEmpty ? [startIndex] : specificWeekdays)
             .map((v) => convertAlternativeValue(
                   outputFormat.isAlternative(useAlternativeValue),
                   v,
@@ -189,7 +187,7 @@ class DayOfWeek extends CronEntity implements CronPart {
       case CronDayType.EVERY_START_AT_MONTH:
         return '';
       case CronDayType.SPECIFIC_DAY_OF_WEEK:
-        var days = (specificWeekdays.isEmpty ? [0] : specificWeekdays)
+        var days = (specificWeekdays.isEmpty ? [startIndex] : specificWeekdays)
             .map((v) => convertAlternativeValue(
                   true,
                   v,
@@ -226,11 +224,15 @@ class DayOfWeek extends CronEntity implements CronPart {
   }
 
   Map<int, String> getWeekdayMap() {
-    return _getWeekdayMap(0);
-  }
-
-  Map<int, String> _getWeekdayMap(int startIndex) {
-    final List<String> dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    final List<String> dayNames = [
+      'SUN',
+      'MON',
+      'TUE',
+      'WED',
+      'THU',
+      'FRI',
+      'SAT',
+    ];
 
     return getMapFromIndex(dayNames, startIndex);
   }
@@ -239,5 +241,10 @@ class DayOfWeek extends CronEntity implements CronPart {
     final List<String> weeks = ['FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH'];
 
     return getMapFromIndex(weeks, 1);
+  }
+
+  @override
+  int get startIndex {
+    return cronDay.expressionType == CronExpressionType.STANDARD ? 0 : 1;
   }
 }

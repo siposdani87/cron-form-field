@@ -1,3 +1,4 @@
+import 'package:cron_form_field/cron_expression.dart';
 import 'package:cron_form_field/src/enums/cron_day_type.dart';
 import 'package:cron_form_field/src/cron_part.dart';
 import 'package:cron_form_field/src/day_of_month.dart';
@@ -9,17 +10,15 @@ class CronDay implements CronPart {
   late DayOfMonth dayOfMonth;
   late DayOfWeek dayOfWeek;
   late CronDayType type;
+  CronExpressionType expressionType;
 
-  CronDay(this.originalDayOfMonthValue, this.originalDayOfWeekValue) {
+  CronDay(
+    this.originalDayOfMonthValue,
+    this.originalDayOfWeekValue,
+    this.expressionType,
+  ) {
     setDefaults();
     _setValue(originalDayOfMonthValue, originalDayOfWeekValue);
-  }
-
-  factory CronDay.fromString(
-    String dayOfMonthExpression,
-    String dayOfWeekExpression,
-  ) {
-    return CronDay(dayOfMonthExpression, dayOfWeekExpression);
   }
 
   @override
@@ -37,12 +36,18 @@ class CronDay implements CronPart {
 
   void _setValue(String dayOfMonthValue, String dayOfWeekValue) {
     type = _getType(dayOfMonthValue, dayOfWeekValue);
-    dayOfMonth = DayOfMonth.fromString(dayOfMonthValue, this);
-    dayOfWeek = DayOfWeek.fromString(dayOfWeekValue, this);
+    dayOfMonth = DayOfMonth(dayOfMonthValue, this);
+    dayOfWeek = DayOfWeek(dayOfWeekValue, this);
+  }
+
+  bool isDayOfMonth(String value) {
+    return (!value.contains('?') &&
+            expressionType == CronExpressionType.QUARTZ) ||
+        !value.contains('*') && expressionType == CronExpressionType.STANDARD;
   }
 
   CronDayType _getType(String dayOfMonthValue, String dayOfWeekValue) {
-    if (!dayOfMonthValue.contains('?')) {
+    if (isDayOfMonth(dayOfMonthValue)) {
       return DayOfMonth.getType(dayOfMonthValue);
     }
 
@@ -51,7 +56,7 @@ class CronDay implements CronPart {
 
   @override
   String toReadableString() {
-    if (!originalDayOfMonthValue.contains('?')) {
+    if (isDayOfMonth(originalDayOfMonthValue)) {
       return dayOfMonth.toReadableString();
     }
 
@@ -60,10 +65,15 @@ class CronDay implements CronPart {
 
   @override
   bool validate(String part) {
-    if (!part.contains('?')) {
+    if (isDayOfMonth(part)) {
       return dayOfMonth.validate(part);
     }
 
     return dayOfWeek.validate(part);
+  }
+
+  @override
+  int get startIndex {
+    return 0;
   }
 }

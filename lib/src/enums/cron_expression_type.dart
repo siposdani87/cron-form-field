@@ -1,0 +1,1 @@
+enum CronExpressionType { STANDARD, QUARTZ }
