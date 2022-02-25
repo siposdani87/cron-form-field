@@ -1,6 +1,6 @@
-## 0.4.0 - 2022-02-24
+## 0.3.1 - 2022-02-25
 
-*
+* Fix index of dayOfWeek and month values
 
 ## 0.3.0 - 2022-02-24
 

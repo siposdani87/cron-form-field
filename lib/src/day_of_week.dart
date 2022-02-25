@@ -227,24 +227,18 @@ class DayOfWeek extends CronEntity implements CronPart {
   }
 
   Map<int, String> getWeekdayMap() {
-    return {
-      0: 'SUN',
-      1: 'MON',
-      2: 'TUE',
-      3: 'WED',
-      4: 'THU',
-      5: 'FRI',
-      6: 'SAT',
-    };
+    return _getWeekdayMap(0);
+  }
+
+  Map<int, String> _getWeekdayMap(int startIndex) {
+    final List<String> dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+
+    return getMapFromIndex(dayNames, startIndex);
   }
 
   Map<int, String> getWeeksMap() {
-    return {
-      1: 'FIRST',
-      2: 'SECOND',
-      3: 'THIRD',
-      4: 'FOURTH',
-      5: 'FIFTH',
-    };
+    final List<String> weeks = ['FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH'];
+
+    return getMapFromIndex(weeks, 1);
   }
 }
