@@ -86,3 +86,17 @@ String serialNumberName(int number) {
 
   return '${number}th';
 }
+
+Map<int, String> getMapFromIndex(List<String> entities, int startIndex) {
+  final Map<int, String> results = {};
+
+  var index = startIndex;
+  for (var entity in entities) {
+    results.addAll({
+      index: entity,
+    });
+    index ++;
+  }
+
+  return results;
+}
