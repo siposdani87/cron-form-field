@@ -6,7 +6,7 @@ import 'package:cron_form_field/src/cron_entity.dart';
 import 'package:cron_form_field/src/cron_part.dart';
 
 class DayOfWeek extends CronEntity implements CronPart {
-  CronDay parent;
+  CronDay cronDay;
   late int everyDay;
   late int? everyStartDay;
   late List<int> specificWeekdays;
@@ -15,13 +15,13 @@ class DayOfWeek extends CronEntity implements CronPart {
   late int? lastDay;
   bool useAlternativeValue = false;
 
-  DayOfWeek(String originalValue, this.parent) : super(originalValue) {
+  DayOfWeek(String originalValue, this.cronDay) : super(originalValue) {
     setDefaults();
     _setValue(originalValue);
   }
 
-  factory DayOfWeek.fromString(String dayOfWeekExpression, CronDay parent) {
-    return DayOfWeek(dayOfWeekExpression, parent);
+  factory DayOfWeek.fromString(String dayOfWeekExpression, CronDay cronDay) {
+    return DayOfWeek(dayOfWeekExpression, cronDay);
   }
 
   @override
@@ -37,22 +37,22 @@ class DayOfWeek extends CronEntity implements CronPart {
 
   @override
   void reset() {
-    parent.type = CronDayType.EVERY_WEEK;
+    cronDay.type = CronDayType.EVERY_WEEK;
     setDefaults();
   }
 
   void setEveryWeek() {
-    parent.type = CronDayType.EVERY_WEEK;
+    cronDay.type = CronDayType.EVERY_WEEK;
   }
 
   void setEveryStartAtWeek(int day, int? startDay) {
-    parent.type = CronDayType.EVERY_START_AT_WEEK;
+    cronDay.type = CronDayType.EVERY_START_AT_WEEK;
     everyDay = day;
     everyStartDay = startDay;
   }
 
   void setSpecificDayOfWeek(List<int> weekdays) {
-    parent.type = CronDayType.SPECIFIC_DAY_OF_WEEK;
+    cronDay.type = CronDayType.SPECIFIC_DAY_OF_WEEK;
     specificWeekdays = weekdays;
   }
 
@@ -67,13 +67,13 @@ class DayOfWeek extends CronEntity implements CronPart {
   }
 
   void setXthDayOfMonth(int weekday, int weeks) {
-    parent.type = CronDayType.XTH_DAY_OF_MONTH;
+    cronDay.type = CronDayType.XTH_DAY_OF_MONTH;
     xthWeekday = weekday;
     xthWeeks = weeks;
   }
 
   void setLastXDayOfMonth(int? day) {
-    parent.type = CronDayType.LAST_X_DAY_OF_MONTH;
+    cronDay.type = CronDayType.LAST_X_DAY_OF_MONTH;
     lastDay = day;
   }
 
@@ -82,7 +82,7 @@ class DayOfWeek extends CronEntity implements CronPart {
       throw ArgumentError('Invalid day of week part of expression!');
     }
     handleAlternativeValue(value);
-    switch (parent.type) {
+    switch (cronDay.type) {
       case CronDayType.EVERY_WEEK:
         break;
       case CronDayType.EVERY_MONTH:
@@ -140,7 +140,7 @@ class DayOfWeek extends CronEntity implements CronPart {
   }
 
   String toFormatString(CronExpressionOutputFormat outputFormat) {
-    switch (parent.type) {
+    switch (cronDay.type) {
       case CronDayType.EVERY_WEEK:
         return '*';
       case CronDayType.EVERY_MONTH:
@@ -177,7 +177,7 @@ class DayOfWeek extends CronEntity implements CronPart {
 
   @override
   String toReadableString() {
-    switch (parent.type) {
+    switch (cronDay.type) {
       case CronDayType.EVERY_WEEK:
         return '';
       case CronDayType.EVERY_MONTH:
