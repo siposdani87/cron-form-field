@@ -1,6 +1,11 @@
-## 0.5.0 - 2022-02-25
+## 0.6.0 - TBD
 
 * 
+
+## 0.5.0 - 2022-05-26
+
+* Support Flutter 3
+* Upgrade dependencies
 
 ## 0.4.0 - 2022-02-25
 
@@ -10,7 +15,7 @@
 
 ## 0.3.0 - 2022-02-24
 
-* Add outputFormat property (default: CronExpressionOutputFormat.AUTO).
+* Add outputFormat property (default: CronExpressionOutputFormat.AUTO)
 * Fix dart lint issues
 * Upgrade dependencies
 
@@ -20,4 +25,4 @@
 
 ## 0.0.1 - 2021-07-28
 
-* Initial release.
+* Initial release
