@@ -19,12 +19,12 @@ class CronPickerDialog extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _CronPickerDialogState createState() => _CronPickerDialogState();
+  CronPickerDialogState createState() => CronPickerDialogState();
 }
 
 enum PanelType { NONE, MINUTES, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY }
 
-class _CronPickerDialogState extends State<CronPickerDialog> {
+class CronPickerDialogState extends State<CronPickerDialog> {
   late CronExpression _cronExpression;
   PanelType _opened = PanelType.NONE;
 
@@ -177,7 +177,7 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
   Widget _dropdownButtonFromMap<T, K>(
     String key,
     Map<T, K> map,
-    T? value,
+    T value,
     void Function(T) onChanged,
   ) {
     return Container(
@@ -188,13 +188,16 @@ class _CronPickerDialogState extends State<CronPickerDialog> {
         items: map.entries.map((entry) {
           return DropdownMenuItem<T>(
             key: Key('${key}_dropdown_menu_item_${entry.key}'),
-            child: Text(entry.value.toString()),
             value: entry.key,
+            child: Text(entry.value.toString()),
           );
         }).toList(),
         onChanged: (T? value) {
+          if (value == null) {
+            return;
+          }
           setState(() {
-            onChanged(value!);
+            onChanged(value);
           });
         },
       ),

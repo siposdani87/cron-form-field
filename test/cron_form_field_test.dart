@@ -112,10 +112,10 @@ class MyWidget extends StatefulWidget {
   const MyWidget({Key? key, required this.cronExpression}) : super(key: key);
 
   @override
-  _MyWidgetState createState() => _MyWidgetState();
+  MyWidgetState createState() => MyWidgetState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class MyWidgetState extends State<MyWidget> {
   late String _value;
 
   @override

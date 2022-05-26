@@ -258,8 +258,8 @@ class CronFormField extends FormField<String> {
           // autovalidate: autovalidate,
           enabled: enabled,
           builder: (FormFieldState<String> formFieldState) {
-            final _CronFormFieldState state =
-                formFieldState as _CronFormFieldState;
+            final CronFormFieldState state =
+                formFieldState as CronFormFieldState;
 
             final InputDecoration effectiveDecoration = decoration ??
                 InputDecoration(
@@ -325,10 +325,10 @@ class CronFormField extends FormField<String> {
         );
 
   @override
-  _CronFormFieldState createState() => _CronFormFieldState();
+  CronFormFieldState createState() => CronFormFieldState();
 }
 
-class _CronFormFieldState extends FormFieldState<String> {
+class CronFormFieldState extends FormFieldState<String> {
   late TextEditingController _valueController;
   late String _initialValue;
 
