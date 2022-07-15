@@ -2,7 +2,7 @@
 
 * 
 
-## 0.5.0 - 2022-05-26
+## 0.5.0 - 2022-07-15
 
 * Support Flutter 3
 * Upgrade dependencies
@@ -21,7 +21,7 @@
 
 ## 0.2.0 - 2021-08-05
 
-* Updated cron expression parser.
+* Updated cron expression parser
 
 ## 0.0.1 - 2021-07-28
 
