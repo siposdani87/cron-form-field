@@ -1,7 +1,7 @@
 name: cron_form_field
 description: >-
   A Flutter cron form field widget. It can edit cron expressions with this form field in an alert dialog.
-version: 0.5.0
+version: 0.6.0
 homepage: https://github.com/siposdani87/cron-form-field
 
 environment:
