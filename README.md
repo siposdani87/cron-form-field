@@ -40,8 +40,17 @@ CronFormField(
 The result of val in `onChanged`, `validator` and `onSaved` will be a String.
 
 ## Preview
+
 ![Overview](https://raw.githubusercontent.com/siposdani87/cron-form-field/master/doc/images/cron_form_field.png)
 
 ## Bugs or Requests
 
 If you encounter any problems feel free to open an [issue](https://github.com/siposdani87/cron-form-field/issues/new?template=bug_report.md). If you feel the library is missing a feature, please raise a [ticket](https://github.com/siposdani87/cron-form-field/issues/new?template=feature_request.md). Pull request are also welcome.
+
+## Developer
+
+[Dániel Sipos](https://siposdani87.com)
+
+## Sponsors
+
+This project is generously supported by [TrophyMap](https://trophymap.org), [I18Nature](https://i18nature.com), and several other amazing organizations.
