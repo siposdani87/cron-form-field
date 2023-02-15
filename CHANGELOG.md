@@ -1,6 +1,11 @@
-## 0.6.0 - TBD
+## 0.7.0 - TBD
 
 * 
+
+## 0.6.0 - 2023-02-15
+
+* Support Flutter 3.7
+* Upgrade dependencies 
 
 ## 0.5.0 - 2022-07-15
 
