@@ -33,14 +33,20 @@ void main() {
       of: find.text('Minutes'),
       matching: find.byType(ListTile),
     );
+    expect(
+      panelListTile,
+      findsOneWidget,
+      reason: 'CronFormField Minutes listTile not found!',
+    );
+
     await tester.tap(panelListTile);
     await tester.pumpAndSettle();
 
-    var buttonLabel = find.text('5');
+    var buttonLabel = find.text('1');
     expect(
       buttonLabel,
       findsOneWidget,
-      reason: 'CronFormField 5 option not displayed on dialog!',
+      reason: 'CronFormField 1 option not displayed on dialog!',
     );
     var button = find.ancestor(
       of: buttonLabel,

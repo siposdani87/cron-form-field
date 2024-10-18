@@ -27,7 +27,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController? _controller;
-  //String _initialValue;
   String _valueChanged = '';
   String _valueToValidate = '';
   String _valueSaved = '';
@@ -36,7 +35,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    //_initialValue = '1 0 0 ? * * *';
     _controller = TextEditingController(text: '1 0 0 ? * * *');
 
     _setDelayedValue();
@@ -47,8 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _setDelayedValue() async {
     await Future.delayed(const Duration(seconds: 3), () {
       setState(() {
-        //_initialValue = '1 0-5 0 ? * * *';
-        _controller?.text = '1 0-5 0 ? * * *';
+        _controller?.text = '7 0-5 0 ? * * *';
       });
     });
   }

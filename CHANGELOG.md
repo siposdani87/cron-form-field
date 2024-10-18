@@ -1,6 +1,11 @@
-## 0.7.0 - TBD
+## 0.8.0 - TBD
 
-* 
+*
+
+## 0.7.0 - 2024-10-18
+
+* Support Dart 3
+* Upgrade dependencies
 
 ## 0.6.0 - 2023-02-15
 
