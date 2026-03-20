@@ -3,7 +3,7 @@ import 'package:cron_form_field/src/util.dart';
 
 /// The minutes part of a cron expression (0-59).
 class CronMinute extends CronTimePart {
-  CronMinute(String originalValue) : super(originalValue);
+  CronMinute(super.originalValue);
 
   @override
   String get label => 'minute';

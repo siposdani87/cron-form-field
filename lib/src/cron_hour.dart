@@ -3,7 +3,7 @@ import 'package:cron_form_field/src/util.dart';
 
 /// The hours part of a cron expression (0-23).
 class CronHour extends CronTimePart {
-  CronHour(String originalValue) : super(originalValue);
+  CronHour(super.originalValue);
 
   @override
   String get label => 'hour';
