@@ -11,13 +11,35 @@ import 'package:cron_form_field/src/enums/cron_expression_type.dart';
 
 export 'package:cron_form_field/src/enums/cron_expression_type.dart';
 
+/// Represents a parsed cron expression with individual part accessors.
+///
+/// Supports both Standard (5-part) and Quartz (6-7 part) cron formats.
+///
+/// ```dart
+/// final expr = CronExpression.fromString('0 30 9 ? * MON-FRI');
+/// print(expr.toReadableString()); // Human-readable description
+/// print(expr.toString());         // Back to cron string
+/// ```
 class CronExpression {
+  /// The seconds part (Quartz only, empty for Standard).
   CronSecond second;
+
+  /// The minutes part (0-59).
   CronMinute minute;
+
+  /// The hours part (0-23).
   CronHour hour;
+
   CronDay _day;
+
+  /// The month part (1-12 or JAN-DEC).
   CronMonth month;
+
+  /// The year part (Quartz only, empty for Standard).
   CronYear year;
+
+  /// Whether this is a [CronExpressionType.standard] or
+  /// [CronExpressionType.quartz] expression.
   CronExpressionType type;
 
   CronExpression(
@@ -30,6 +52,10 @@ class CronExpression {
     this.type,
   );
 
+  /// Parses a cron expression string into a [CronExpression].
+  ///
+  /// Accepts 5-part (Standard), 6-part, or 7-part (Quartz) expressions.
+  /// If fewer than 5 parts are provided, falls back to `* * ? * *`.
   factory CronExpression.fromString(String cronExpression) {
     List<String> expressionParts = cronExpression.split(' ');
     if (expressionParts.length < 5) {
@@ -71,10 +97,13 @@ class CronExpression {
     );
   }
 
+  /// The day-of-month part (1-31, or special values like L, W).
   DayOfMonth get dayOfMonth => _day.dayOfMonth;
 
+  /// The day-of-week part (0-6 or SUN-SAT, or special values like #, L).
   DayOfWeek get dayOfWeek => _day.dayOfWeek;
 
+  /// Resets all parts to their default wildcard values.
   void reset() {
     second.reset();
     minute.reset();
@@ -84,11 +113,13 @@ class CronExpression {
     year.reset();
   }
 
+  /// Returns the cron expression as a string using [CronExpressionOutputFormat.auto].
   @override
   String toString() {
     return toFormatString(CronExpressionOutputFormat.auto);
   }
 
+  /// Returns the cron expression as a string using the specified [outputFormat].
   String toFormatString(CronExpressionOutputFormat outputFormat) {
     return [
       second.toString(),
@@ -104,6 +135,9 @@ class CronExpression {
         .replaceFirst('?', type == CronExpressionType.standard ? '*' : '?');
   }
 
+  /// Returns a human-readable description of the cron expression.
+  ///
+  /// Example: `'At minute 30, at hour 9, on the MON, TUE, WED, THU and FRI day'`
   String toReadableString() {
     final pattern = RegExp('\\s+');
     var sentence = [
