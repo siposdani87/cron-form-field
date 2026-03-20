@@ -146,8 +146,9 @@ class CronMonth implements CronPart {
 
   @override
   bool validate(String part) {
-    return RegExp(r'^(\*|(\*|[0-9]{1,2})/[0-9]{1,2}|[0-9A-Z]{1,3}(-[0-9A-Z]{1,3}|)(,[0-9A-Z]{1,3})*)$',
-        caseSensitive: false)
+    return RegExp(
+            r'^(\*|(\*|[0-9]{1,2})/[0-9]{1,2}|[0-9A-Z]{1,3}(-[0-9A-Z]{1,3}|)(,[0-9A-Z]{1,3})*)$',
+            caseSensitive: false)
         .hasMatch(part);
   }
 

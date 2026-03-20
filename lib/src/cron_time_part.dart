@@ -153,7 +153,8 @@ abstract class CronTimePart implements CronPart {
 
   @override
   bool validate(String part) {
-    return RegExp(r'^(\*|(\*|[0-9]{1,2})/[0-9]{1,2}|[0-9]{1,2}(-[0-9]{1,2}|)(,[0-9]{1,2})*)$')
+    return RegExp(
+            r'^(\*|(\*|[0-9]{1,2})/[0-9]{1,2}|[0-9]{1,2}(-[0-9]{1,2}|)(,[0-9]{1,2})*)$')
         .hasMatch(part);
   }
 }

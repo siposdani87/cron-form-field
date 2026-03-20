@@ -195,7 +195,8 @@ class DayOfMonth implements CronPart {
 
   @override
   bool validate(String part) {
-    return RegExp(r'^(\*|\?|(\*|[0-9]{1,2})/[0-9]{1,2}|[0-9]{1,2}(,[0-9]{1,2})*|[0-9]*L|LW|L-[0-9]{1,2}|[0-9]{1,2}W)$')
+    return RegExp(
+            r'^(\*|\?|(\*|[0-9]{1,2})/[0-9]{1,2}|[0-9]{1,2}(,[0-9]{1,2})*|[0-9]*L|LW|L-[0-9]{1,2}|[0-9]{1,2}W)$')
         .hasMatch(part);
   }
 

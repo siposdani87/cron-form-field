@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:cron_form_field/src/cron_picker_dialog.dart';
 
 export 'package:cron_form_field/src/enums/cron_expression_output_format.dart';
-export 'package:cron_form_field/src/cron_picker_dialog.dart' show CronPickerDialog;
+export 'package:cron_form_field/src/cron_picker_dialog.dart'
+    show CronPickerDialog;
 
 /// A form field for editing cron expressions via a picker dialog.
 ///

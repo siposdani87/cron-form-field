@@ -19,7 +19,8 @@ void main() {
       expect(CronExpression.fromString(expression).toString(), expression);
     });
 
-    test('Parse at minute 0, at hours and 12, on the 1st day, every 2 months', () {
+    test('Parse at minute 0, at hours and 12, on the 1st day, every 2 months',
+        () {
       var expression = '0 0,12 1 */2 *';
       expect(CronExpression.fromString(expression).toString(), expression);
     });
@@ -86,7 +87,8 @@ void main() {
       expect(CronExpression.fromString(expression).toString(), expression);
     });
 
-    test('Parse every month on the second to last day of the month, at noon', () {
+    test('Parse every month on the second to last day of the month, at noon',
+        () {
       var expression = '0 0 12 L-2 * ?';
       expect(CronExpression.fromString(expression).toString(), expression);
     });
@@ -102,12 +104,14 @@ void main() {
     });
 
     test(
-        'Parse every month on the nearest Weekday to the 15th of the month, at noon', () {
+        'Parse every month on the nearest Weekday to the 15th of the month, at noon',
+        () {
       var expression = '0 0 12 15W * ?';
       expect(CronExpression.fromString(expression).toString(), expression);
     });
 
-    test('Parse every month on the third Thursday of the Month, at noon - 12pm', () {
+    test('Parse every month on the third Thursday of the Month, at noon - 12pm',
+        () {
       var expression = '0 0 12 ? * 5#3';
       expect(CronExpression.fromString(expression).toString(), expression);
     });
@@ -133,13 +137,15 @@ void main() {
     });
 
     test(
-        'Parse every 30 minutes starting at :00 minute after the hour, 1 days before the end of the month, every month starting in April', () {
+        'Parse every 30 minutes starting at :00 minute after the hour, 1 days before the end of the month, every month starting in April',
+        () {
       var expression = '* 0/30 * L-1 4/1 ? *';
       expect(CronExpression.fromString(expression).toString(), expression);
     });
 
     test(
-        'Parse every 6 seconds starting at second 09, at minutes :00, :11 and :31, every hour between 04am and 07am, on the nearest weekday to the 27th of the month, every 3 months starting in October, in 2021', () {
+        'Parse every 6 seconds starting at second 09, at minutes :00, :11 and :31, every hour between 04am and 07am, on the nearest weekday to the 27th of the month, every 3 months starting in October, in 2021',
+        () {
       var expression = '9/6 0,11,31 4-7 27W 10/3 ? 2021';
       expect(CronExpression.fromString(expression).toString(), expression);
     });
@@ -177,7 +183,8 @@ void main() {
 
     test('Day before end of month', () {
       var expr = CronExpression.fromString('0 0 12 L-2 * ?');
-      expect(expr.toReadableString(), contains('2 days before the end of the month'));
+      expect(expr.toReadableString(),
+          contains('2 days before the end of the month'));
     });
 
     test('Last weekday of month', () {
@@ -225,14 +232,16 @@ void main() {
 
     test('ALLOWED_VALUES outputs numeric months', () {
       var expr = CronExpression.fromString('0 0 12 ? JAN,JUN *');
-      var result = expr.toFormatString(CronExpressionOutputFormat.allowedValues);
+      var result =
+          expr.toFormatString(CronExpressionOutputFormat.allowedValues);
       expect(result, contains('0'));
       expect(result, isNot(contains('JAN')));
     });
 
     test('ALTERNATIVE_VALUES outputs named months from Quartz', () {
       var expr = CronExpression.fromString('0 0 12 ? 2,12 *');
-      var result = expr.toFormatString(CronExpressionOutputFormat.alternativeValues);
+      var result =
+          expr.toFormatString(CronExpressionOutputFormat.alternativeValues);
       // Quartz months are 0-based: 2=MAR, 12=null (index maps differ by expression type)
       expect(result, isNotEmpty);
     });
@@ -247,7 +256,8 @@ void main() {
 
     test('ALTERNATIVE_VALUES outputs named weekdays', () {
       var expr = CronExpression.fromString('0 0 12 ? * 1,7');
-      var result = expr.toFormatString(CronExpressionOutputFormat.alternativeValues);
+      var result =
+          expr.toFormatString(CronExpressionOutputFormat.alternativeValues);
       expect(result, contains('SUN'));
       expect(result, contains('SAT'));
     });
@@ -396,7 +406,8 @@ void main() {
   group('October month name fix', () {
     test('OCT is used instead of OKT in Standard expressions', () {
       var expr = CronExpression.fromString('0 0 * 10 *');
-      var result = expr.month.toFormatString(CronExpressionOutputFormat.alternativeValues);
+      var result = expr.month
+          .toFormatString(CronExpressionOutputFormat.alternativeValues);
       expect(result, 'OCT');
       expect(result, isNot(contains('OKT')));
     });

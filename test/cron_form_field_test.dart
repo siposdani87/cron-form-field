@@ -5,7 +5,8 @@ import 'package:cron_form_field/cron_form_field.dart';
 
 void main() {
   group('CronFormField widget', () {
-    testWidgets('renders with initial value and label', (WidgetTester tester) async {
+    testWidgets('renders with initial value and label',
+        (WidgetTester tester) async {
       const cronExpression = '* 5 * ? * *';
       await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
 
@@ -75,7 +76,8 @@ void main() {
       );
     });
 
-    testWidgets('cancel button closes dialog without changing value', (WidgetTester tester) async {
+    testWidgets('cancel button closes dialog without changing value',
+        (WidgetTester tester) async {
       const cronExpression = '* 5 * ? * *';
       await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
 
@@ -114,7 +116,8 @@ void main() {
       );
     });
 
-    testWidgets('opening Minutes panel shows minute controls', (WidgetTester tester) async {
+    testWidgets('opening Minutes panel shows minute controls',
+        (WidgetTester tester) async {
       const cronExpression = '* 5 * ? * *';
       await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
 
@@ -145,7 +148,8 @@ void main() {
       );
     });
 
-    testWidgets('opening Hourly panel shows hour controls', (WidgetTester tester) async {
+    testWidgets('opening Hourly panel shows hour controls',
+        (WidgetTester tester) async {
       const cronExpression = '0 0 */3 ? * *';
       await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
 
@@ -166,7 +170,8 @@ void main() {
       );
     });
 
-    testWidgets('opening Weekly panel shows weekday checkboxes', (WidgetTester tester) async {
+    testWidgets('opening Weekly panel shows weekday checkboxes',
+        (WidgetTester tester) async {
       const cronExpression = '0 0 12 ? * TUE';
       await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
 
@@ -192,7 +197,8 @@ void main() {
       );
     });
 
-    testWidgets('dialog shows readable description', (WidgetTester tester) async {
+    testWidgets('dialog shows readable description',
+        (WidgetTester tester) async {
       const cronExpression = '0 0 12 ? * TUE';
       await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
 
@@ -206,7 +212,8 @@ void main() {
       );
     });
 
-    testWidgets('done after opening panel returns new value', (WidgetTester tester) async {
+    testWidgets('done after opening panel returns new value',
+        (WidgetTester tester) async {
       const cronExpression = '0 0 12 ? * TUE';
       await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
 
@@ -226,7 +233,8 @@ void main() {
       expect(
         find.text(cronExpression),
         findsNothing,
-        reason: 'Original expression should be replaced after opening a panel and pressing Done',
+        reason:
+            'Original expression should be replaced after opening a panel and pressing Done',
       );
     });
   });

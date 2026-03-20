@@ -55,7 +55,16 @@ class CronPickerDialog extends StatefulWidget {
   CronPickerDialogState createState() => CronPickerDialogState();
 }
 
-enum _PanelType { none, seconds, minutes, hourly, daily, weekly, monthly, yearly }
+enum _PanelType {
+  none,
+  seconds,
+  minutes,
+  hourly,
+  daily,
+  weekly,
+  monthly,
+  yearly
+}
 
 class CronPickerDialogState extends State<CronPickerDialog> {
   late CronExpression _cronExpression;
@@ -176,8 +185,8 @@ class CronPickerDialogState extends State<CronPickerDialog> {
                       .setSpecificMinutes([_cronExpression.minute.startIndex]);
                   _cronExpression.hour
                       .setSpecificHours([_cronExpression.hour.startIndex]);
-                  _cronExpression.dayOfWeek
-                      .setXthDayOfMonth(_cronExpression.dayOfWeek.startIndex, 1);
+                  _cronExpression.dayOfWeek.setXthDayOfMonth(
+                      _cronExpression.dayOfWeek.startIndex, 1);
                   _cronExpression.month.setEveryMonthStartAt(1);
                 },
               ),
@@ -194,8 +203,8 @@ class CronPickerDialogState extends State<CronPickerDialog> {
                       .setSpecificMinutes([_cronExpression.minute.startIndex]);
                   _cronExpression.hour
                       .setSpecificHours([_cronExpression.hour.startIndex]);
-                  _cronExpression.dayOfWeek
-                      .setXthDayOfMonth(_cronExpression.dayOfWeek.startIndex, 1);
+                  _cronExpression.dayOfWeek.setXthDayOfMonth(
+                      _cronExpression.dayOfWeek.startIndex, 1);
                   _cronExpression.month
                       .setSpecificMonths([_cronExpression.month.startIndex]);
                 },
@@ -221,7 +230,8 @@ class CronPickerDialogState extends State<CronPickerDialog> {
   }
 
   Widget _cronExpressionText() {
-    final expressionString = _cronExpression.toFormatString(widget.outputFormat);
+    final expressionString =
+        _cronExpression.toFormatString(widget.outputFormat);
     final readableString = _cronExpression.toReadableString();
 
     return Center(
@@ -234,8 +244,8 @@ class CronPickerDialogState extends State<CronPickerDialog> {
               child: Text(
                 expressionString,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontFamily: 'monospace',
-                ),
+                      fontFamily: 'monospace',
+                    ),
               ),
             ),
             if (readableString.isNotEmpty)
@@ -244,8 +254,12 @@ class CronPickerDialogState extends State<CronPickerDialog> {
                 child: Text(
                   readableString,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
-                  ),
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.color
+                            ?.withValues(alpha: 0.7),
+                      ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -311,7 +325,8 @@ class CronPickerDialogState extends State<CronPickerDialog> {
         },
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: child,
           ),
         ],
@@ -433,7 +448,8 @@ class CronPickerDialogState extends State<CronPickerDialog> {
         ..._cronExpression.dayOfWeek.getWeekdayMap().entries.map((weekday) {
           return CheckboxListTile(
             title: Text(weekday.value),
-            value: _cronExpression.dayOfWeek.specificWeekdays.contains(weekday.key),
+            value: _cronExpression.dayOfWeek.specificWeekdays
+                .contains(weekday.key),
             onChanged: (bool? value) {
               _cronExpression.dayOfWeek.toggleSpecificWeekday(weekday.key);
               setState(() {});

@@ -1,4 +1,3 @@
-
 import 'package:cron_form_field/src/cron_part.dart';
 import 'package:cron_form_field/src/enums/cron_year_type.dart';
 
@@ -141,7 +140,8 @@ class CronYear implements CronPart {
 
   @override
   bool validate(String part) {
-    return RegExp(r'^(\*|(\*|[0-9]{4})/([0-9]{1,4}|\*)|[0-9]{4}(-[0-9]{4}|)(,[0-9]{4})*)$')
+    return RegExp(
+            r'^(\*|(\*|[0-9]{4})/([0-9]{1,4}|\*)|[0-9]{4}(-[0-9]{4}|)(,[0-9]{4})*)$')
         .hasMatch(part);
   }
 
