@@ -4,6 +4,7 @@
 
 library cron_form_field;
 
+import 'package:cron_form_field/cron_expression.dart';
 import 'package:cron_form_field/src/enums/cron_expression_output_format.dart';
 import 'package:flutter/material.dart';
 import 'package:cron_form_field/src/cron_picker_dialog.dart';
@@ -44,17 +45,25 @@ class CronFormField extends FormField<String> {
   /// initialize its [TextEditingController.text] with [initialValue].
   final TextEditingController? controller;
 
-  /// An icon to show before the input field and outside of the decoration's
-  /// container.
-  final Widget? icon;
+  /// The decoration to show around the text field.
+  ///
+  /// If null, a default decoration with [labelText], [hintText], [icon],
+  /// and a dropdown arrow suffix icon will be used.
+  final InputDecoration? decoration;
 
-  /// Text that describes the input field.
+  /// Text that describes the input field. Used in the default decoration
+  /// when [decoration] is null, and as the dialog title fallback.
   final String? labelText;
 
-  /// Text that suggests what sort of input the field accepts.
+  /// Text that suggests what sort of input the field accepts. Used in the
+  /// default decoration when [decoration] is null.
   final String? hintText;
 
-  /// The title of the dialog window.
+  /// An icon to show before the input field. Used in the default decoration
+  /// when [decoration] is null.
+  final Widget? icon;
+
+  /// The title of the dialog window. Falls back to [labelText] if null.
   final String? dialogTitle;
 
   /// The done button text on dialog.
@@ -66,8 +75,12 @@ class CronFormField extends FormField<String> {
   /// The output format for the cron expression.
   final CronExpressionOutputFormat outputFormat;
 
-  /// Called when the value changes.
+  /// Called when the string value changes.
   final ValueChanged<String>? onChanged;
+
+  /// Called when the cron expression changes, providing the parsed
+  /// [CronExpression] object for direct access to individual parts.
+  final ValueChanged<CronExpression>? onCronExpressionChanged;
 
   /// Creates a [CronFormField] that contains a read-only [TextField].
   ///
@@ -78,6 +91,7 @@ class CronFormField extends FormField<String> {
   CronFormField({
     Key? key,
     this.controller,
+    this.decoration,
     this.icon,
     this.labelText,
     this.hintText,
@@ -85,10 +99,10 @@ class CronFormField extends FormField<String> {
     this.dialogCancelText = 'Cancel',
     this.dialogDoneText = 'Done',
     this.onChanged,
+    this.onCronExpressionChanged,
     this.outputFormat = CronExpressionOutputFormat.auto,
     String? initialValue,
     FocusNode? focusNode,
-    InputDecoration? decoration,
     TextStyle? style,
     TextAlign textAlign = TextAlign.start,
     TextAlignVertical? textAlignVertical,
@@ -187,6 +201,9 @@ class CronFormFieldState extends FormFieldState<String> {
   void onChangedHandler(String newValue) {
     if (newValue != value) {
       widget.onChanged?.call(newValue);
+      widget.onCronExpressionChanged?.call(
+        CronExpression.fromString(newValue),
+      );
       didChange(newValue);
     }
   }
