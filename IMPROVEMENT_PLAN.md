@@ -70,3 +70,23 @@
 | 4 — Testing | Medium | Medium | ✅ Done (77 unit + 9 widget) |
 | 5 — Architecture | Large | Medium | ✅ Done |
 | 6 — API/UX | Large | Medium | ✅ Done |
+
+## Future Improvements
+
+### Short-term
+
+- **Replace `flutter_lints`** with `lints: ^4.0.0` — `flutter_lints` is deprecated (stuck at 2.0.1)
+- **Pin `test` dependency** — currently `test: any`, pin for reproducible builds
+- **Set up branch protection** on `master` requiring CI to pass
+
+### Medium-term
+
+- **5.3 Make `CronExpression` fields private** — requires reworking the dialog to use methods instead of direct field mutation
+- **Localization support** — panel labels ("Minutes", "Hourly", etc.) and button text are hardcoded in English
+- **Add `CronYear` panel** to the dialog for Quartz expressions (like the Seconds panel)
+
+### Long-term
+
+- **Accessibility audit** — add more `Semantics` labels to dropdowns and checkboxes
+- **Golden tests** — snapshot tests for the dialog UI across themes
+- **Web/desktop optimizations** — keyboard navigation within panels
