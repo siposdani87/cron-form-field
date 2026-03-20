@@ -33,7 +33,7 @@
 - ✅ **5.4** Removed `CronEntity` class and file. All part classes now directly `implements CronPart`.
 - ✅ **5.5** Removed empty `dispose()` override in `CronPickerDialogState`
 - ✅ **5.6** Fixed `_MyHomePageState` → `MyHomePageState` in example (lint warning)
-- **5.1** Deferred: Extract `CronTimePart` base class for second/minute/hour deduplication (large refactor, code works fine as-is)
+- ✅ **5.1** Extracted `CronTimePart` base class — `CronSecond`, `CronMinute`, `CronHour` are now thin subclasses (~30 lines each vs ~150 before). Deleted unused `CronSecondType`, `CronMinuteType`, `CronHourType` enums.
 - **5.3** Deferred: Making `CronExpression` fields private requires reworking the dialog's mutation pattern
 
 ## Phase 6 — API & UX Enhancements ✅ PARTIALLY DONE
@@ -46,8 +46,8 @@
 - ✅ Added `Semantics` label on cron expression display
 - ✅ Rounded panel borders (0 → 4px radius)
 - ✅ Made `PanelType` enum private (`_PanelType`) — implementation detail
-- Expose `CronExpression` object directly via callback/getter (future)
-- Simplify `InputDecoration` dual approach (future)
+- ✅ Added `onCronExpressionChanged` callback exposing parsed `CronExpression` object
+- ✅ Made `decoration` a proper named field with doc comments clarifying the fallback behavior
 - Panel state preservation — `reset()` wipes config when switching panels (future)
 - Add missing Seconds panel to dialog UI (future)
 - Replace custom panels with `ExpansionTile` for Material 3 theming (future)
@@ -68,5 +68,5 @@
 | 3 — pub.dev score | Small | Medium | ✅ Done |
 | 7 — CI/CD | Small | Low-medium | ✅ Done |
 | 4 — Testing | Medium | Medium | ✅ Done (74 unit + 8 widget) |
-| 5 — Architecture | Large | Medium | ✅ Mostly done |
-| 6 — API/UX | Large | Medium | ✅ Partially done |
+| 5 — Architecture | Large | Medium | ✅ Done |
+| 6 — API/UX | Large | Medium | ✅ Mostly done |
