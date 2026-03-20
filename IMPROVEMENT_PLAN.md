@@ -23,11 +23,11 @@
 
 ## Phase 4 — Testing ✅ DONE
 
-- ✅ **Unit tests expanded** from 27 to 74 tests covering: `toReadableString()`, output formats, mutation methods, `reset()`, malformed input, expression type detection, OCT fix, off-by-one fix, DayOfMonth.getType fix
-- ✅ **Widget tests rewritten** with 8 tests: render, dialog open, Cancel, Done, Minutes panel, Hourly panel, Weekly panel (7 checkboxes), readable description, panel-then-Done value change
+- ✅ **Unit tests expanded** from 27 to 77 tests covering: `toReadableString()`, output formats, mutation methods, `reset()`, malformed input, expression type detection, OCT fix, off-by-one fix, DayOfMonth.getType fix
+- ✅ **Widget tests rewritten** with 9 tests: render, dialog open, Cancel, Done, Minutes panel, Hourly panel, Weekly panel (7 checkboxes), readable description, panel-then-Done value change
 - ✅ **CI workflow added** (`ci.yml`) with `flutter analyze` + `flutter test` + `dart format` check
 
-## Phase 5 — Architecture ✅ MOSTLY DONE
+## Phase 5 — Architecture ✅ DONE
 
 - ✅ **5.2** Renamed all enum values from `UPPER_CASE` to `lowerCamelCase` across 8 enum files and all references. Re-enabled `constant_identifier_names` lint.
 - ✅ **5.4** Removed `CronEntity` class and file. All part classes now directly `implements CronPart`.
@@ -67,6 +67,6 @@
 | 2 — Bug fixes | Small | High | ✅ Done |
 | 3 — pub.dev score | Small | Medium | ✅ Done |
 | 7 — CI/CD | Small | Low-medium | ✅ Done |
-| 4 — Testing | Medium | Medium | ✅ Done (74 unit + 8 widget) |
+| 4 — Testing | Medium | Medium | ✅ Done (77 unit + 9 widget) |
 | 5 — Architecture | Large | Medium | ✅ Done |
 | 6 — API/UX | Large | Medium | ✅ Done |
