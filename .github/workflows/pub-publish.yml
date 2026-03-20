@@ -1,14 +1,17 @@
 name: Pub Package
 on:
   push:
-    branches:
-      - master
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+*'
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -16,5 +19,3 @@ jobs:
       - run: flutter test
       - name: Publish
         run: dart pub publish --force
-        env:
-          PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
