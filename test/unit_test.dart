@@ -472,4 +472,41 @@ void main() {
       expect(expr.toString(), '0 0 12 L * ?');
     });
   });
+
+  group('CronExpression fields are final', () {
+    test('fields cannot be reassigned but parts can be mutated', () {
+      var expr = CronExpression.fromString('0 * * ? * *');
+      // Mutating through methods still works
+      expr.minute.setSpecificMinutes([5, 10]);
+      expect(expr.toString(), '0 5,10 * ? * *');
+      // reset still works
+      expr.reset();
+      expect(expr.toString(), '* * * * * ? *');
+    });
+  });
+
+  group('CronYear maps', () {
+    test('getEveryYearMap returns 1-10', () {
+      var expr = CronExpression.fromString('0 0 12 ? * * *');
+      var map = expr.year.getEveryYearMap();
+      expect(map.length, 10);
+      expect(map[1], '1');
+      expect(map[10], '10');
+    });
+
+    test('getYearMap returns current year + 20 years', () {
+      var expr = CronExpression.fromString('0 0 12 ? * * *');
+      var map = expr.year.getYearMap();
+      var currentYear = DateTime.now().year;
+      expect(map.length, 21);
+      expect(map.containsKey(currentYear), true);
+      expect(map.containsKey(currentYear + 20), true);
+    });
+
+    test('setEveryYearStartAt roundtrips', () {
+      var expr = CronExpression.fromString('0 0 12 ? * * *');
+      expr.year.setEveryYearStartAt(2, 2027);
+      expect(expr.year.toString(), '2027/2');
+    });
+  });
 }

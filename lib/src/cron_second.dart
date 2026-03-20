@@ -3,7 +3,7 @@ import 'package:cron_form_field/src/util.dart';
 
 /// The seconds part of a cron expression (0-59). Optional in Standard format.
 class CronSecond extends CronTimePart {
-  CronSecond(String? originalValue) : super(originalValue);
+  CronSecond(super.originalValue);
 
   @override
   String get label => 'second';

@@ -243,7 +243,7 @@ void main() {
 class MyWidget extends StatefulWidget {
   final String cronExpression;
 
-  const MyWidget({Key? key, required this.cronExpression}) : super(key: key);
+  const MyWidget({super.key, required this.cronExpression});
 
   @override
   MyWidgetState createState() => MyWidgetState();

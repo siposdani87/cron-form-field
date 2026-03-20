@@ -22,16 +22,16 @@ Two public entry points:
 
 Internal structure in `lib/src/`:
 - **`CronPart`** (abstract) — interface for all cron parts: `reset()`, `setDefaults()`, `toString()`, `toReadableString()`, `validate()`
-- **`CronEntity`** — base class holding `originalValue` string
-- **Part classes** (`cron_second.dart`, `cron_minute.dart`, `cron_hour.dart`, `cron_month.dart`, `cron_year.dart`) — each extends `CronEntity` and implements `CronPart`
+- **`CronTimePart`** — base class for `CronSecond`, `CronMinute`, `CronHour` (shared logic for time-based parts)
+- **Part classes** (`cron_second.dart`, `cron_minute.dart`, `cron_hour.dart`, `cron_month.dart`, `cron_year.dart`) — each implements `CronPart`
 - **`CronDay`** — composite that holds both `DayOfMonth` and `DayOfWeek` (day-of-month and day-of-week are mutually exclusive in Quartz format)
-- **`CronPickerDialog`** — `AlertDialog` with expandable panels (Minutes, Hourly, Daily, Weekly, Monthly, Yearly) that manipulate `CronExpression` state
-- **Enums** in `enums/` — `CronExpressionType` (STANDARD/QUARTZ), `CronExpressionOutputFormat` (AUTO/numeric/named), and per-part type enums
+- **`CronPickerDialog`** — `AlertDialog` with `ExpansionTile` panels (Seconds, Minutes, Hourly, Daily, Weekly, Monthly, Yearly) that manipulate `CronExpression` state
+- **Enums** in `enums/` — `CronExpressionType`, `CronExpressionOutputFormat`, and per-part type enums (all use lowerCamelCase)
 
 ## Key Conventions
 
-- Dart SDK constraint: `>=2.12.0 <3.0.0` (null safety enabled)
-- Linting: `flutter_lints` + `dart_code_metrics` (cyclomatic complexity ≤20, max nesting ≤5, params ≤7, SLOC ≤80)
+- Dart SDK constraint: `>=3.0.0 <4.0.0`, Flutter `>=3.10.0`
+- Linting: `flutter_lints: ^6.0.0`
 - Lint rules: prefer single quotes, prefer trailing commas, newline before return
-- `constant_identifier_names` lint is disabled (enums use UPPER_CASE)
-- CI publishes to pub.dev on push to `master`
+- CI runs `flutter analyze` + `flutter test` + `dart format` check on push/PR to `master`
+- CI publishes to pub.dev on tag push via OIDC auth

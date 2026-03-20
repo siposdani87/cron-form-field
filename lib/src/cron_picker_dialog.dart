@@ -1,4 +1,5 @@
 import 'package:cron_form_field/cron_expression.dart';
+import 'package:cron_form_field/src/cron_picker_labels.dart';
 import 'package:cron_form_field/src/enums/cron_expression_output_format.dart';
 import 'package:flutter/material.dart';
 
@@ -14,18 +15,30 @@ import 'package:flutter/material.dart';
 class CronPickerDialog extends StatefulWidget {
   final String value;
   final String? title;
-  final String btnDoneText;
-  final String btnCancelText;
   final CronExpressionOutputFormat outputFormat;
+  final CronPickerLabels labels;
+
+  @Deprecated('Use labels.done instead')
+  final String? btnDoneText;
+  @Deprecated('Use labels.cancel instead')
+  final String? btnCancelText;
 
   const CronPickerDialog({
-    Key? key,
+    super.key,
     required this.value,
     this.title,
-    this.btnDoneText = 'Done',
-    this.btnCancelText = 'Cancel',
+    @Deprecated('Use labels.done instead') this.btnDoneText,
+    @Deprecated('Use labels.cancel instead') this.btnCancelText,
     this.outputFormat = CronExpressionOutputFormat.auto,
-  }) : super(key: key);
+    this.labels = const CronPickerLabels(),
+  });
+
+  String get _doneText =>
+      // ignore: deprecated_member_use_from_same_package
+      btnDoneText ?? labels.done;
+  String get _cancelText =>
+      // ignore: deprecated_member_use_from_same_package
+      btnCancelText ?? labels.cancel;
 
   /// Shows the cron picker dialog and returns the selected cron expression
   /// string, or null if cancelled.
@@ -33,9 +46,10 @@ class CronPickerDialog extends StatefulWidget {
     required BuildContext context,
     required String value,
     String? title,
-    String btnDoneText = 'Done',
-    String btnCancelText = 'Cancel',
+    @Deprecated('Use labels.done instead') String? btnDoneText,
+    @Deprecated('Use labels.cancel instead') String? btnCancelText,
     CronExpressionOutputFormat outputFormat = CronExpressionOutputFormat.auto,
+    CronPickerLabels labels = const CronPickerLabels(),
   }) {
     return showDialog<String?>(
       context: context,
@@ -43,9 +57,12 @@ class CronPickerDialog extends StatefulWidget {
         return CronPickerDialog(
           value: value,
           title: title,
+          // ignore: deprecated_member_use_from_same_package
           btnDoneText: btnDoneText,
+          // ignore: deprecated_member_use_from_same_package
           btnCancelText: btnCancelText,
           outputFormat: outputFormat,
+          labels: labels,
         );
       },
     );
@@ -63,7 +80,8 @@ enum _PanelType {
   daily,
   weekly,
   monthly,
-  yearly
+  yearly,
+  year,
 }
 
 class CronPickerDialogState extends State<CronPickerDialog> {
@@ -71,6 +89,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
   _PanelType _opened = _PanelType.none;
 
   bool get _isQuartz => _cronExpression.type == CronExpressionType.quartz;
+  CronPickerLabels get _labels => widget.labels;
 
   @override
   void initState() {
@@ -105,7 +124,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
               if (_isQuartz)
                 _buildExpansionTile(
                   key: 'seconds',
-                  title: 'Seconds',
+                  title: _labels.seconds,
                   panelType: _PanelType.seconds,
                   child: _secondsPanel(),
                   onOpen: () {
@@ -115,7 +134,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
                 ),
               _buildExpansionTile(
                 key: 'minutes',
-                title: 'Minutes',
+                title: _labels.minutes,
                 panelType: _PanelType.minutes,
                 child: _minutesPanel(),
                 onOpen: () {
@@ -125,7 +144,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
               ),
               _buildExpansionTile(
                 key: 'hourly',
-                title: 'Hourly',
+                title: _labels.hourly,
                 panelType: _PanelType.hourly,
                 child: _hourlyPanel(),
                 onOpen: () {
@@ -140,7 +159,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
               ),
               _buildExpansionTile(
                 key: 'daily',
-                title: 'Daily',
+                title: _labels.daily,
                 panelType: _PanelType.daily,
                 child: _dailyPanel(),
                 onOpen: () {
@@ -156,7 +175,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
               ),
               _buildExpansionTile(
                 key: 'weekly',
-                title: 'Weekly',
+                title: _labels.weekly,
                 panelType: _PanelType.weekly,
                 child: _weeklyPanel(),
                 onOpen: () {
@@ -174,7 +193,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
               ),
               _buildExpansionTile(
                 key: 'monthly',
-                title: 'Monthly',
+                title: _labels.monthly,
                 panelType: _PanelType.monthly,
                 child: _monthlyPanel(),
                 onOpen: () {
@@ -192,7 +211,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
               ),
               _buildExpansionTile(
                 key: 'yearly',
-                title: 'Yearly',
+                title: _labels.yearly,
                 panelType: _PanelType.yearly,
                 child: _yearlyPanel(),
                 onOpen: () {
@@ -209,6 +228,27 @@ class CronPickerDialogState extends State<CronPickerDialog> {
                       .setSpecificMonths([_cronExpression.month.startIndex]);
                 },
               ),
+              if (_isQuartz)
+                _buildExpansionTile(
+                  key: 'year',
+                  title: _labels.year,
+                  panelType: _PanelType.year,
+                  child: _yearPanel(),
+                  onOpen: () {
+                    _cronExpression.reset();
+                    _cronExpression.second.setSpecificSeconds(
+                        [_cronExpression.second.startIndex]);
+                    _cronExpression.minute.setSpecificMinutes(
+                        [_cronExpression.minute.startIndex]);
+                    _cronExpression.hour
+                        .setSpecificHours([_cronExpression.hour.startIndex]);
+                    _cronExpression.dayOfWeek.setXthDayOfMonth(
+                        _cronExpression.dayOfWeek.startIndex, 1);
+                    _cronExpression.month
+                        .setSpecificMonths([_cronExpression.month.startIndex]);
+                    _cronExpression.year.setEveryYearStartAt(1);
+                  },
+                ),
             ],
           ),
         ),
@@ -216,14 +256,14 @@ class CronPickerDialogState extends State<CronPickerDialog> {
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text(widget.btnCancelText),
+          child: Text(widget._cancelText),
         ),
         TextButton(
           onPressed: () => Navigator.pop(
             context,
             _cronExpression.toFormatString(widget.outputFormat),
           ),
-          child: Text(widget.btnDoneText),
+          child: Text(widget._doneText),
         ),
       ],
     );
@@ -275,26 +315,29 @@ class CronPickerDialogState extends State<CronPickerDialog> {
     T value,
     void Function(T) onChanged,
   ) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: DropdownButton<T>(
-        key: Key('${key}_dropdown_button'),
-        value: value,
-        items: map.entries.map((entry) {
-          return DropdownMenuItem<T>(
-            key: Key('${key}_dropdown_menu_item_${entry.key}'),
-            value: entry.key,
-            child: Text(entry.value.toString()),
-          );
-        }).toList(),
-        onChanged: (T? value) {
-          if (value == null) {
-            return;
-          }
-          setState(() {
-            onChanged(value);
-          });
-        },
+    return Semantics(
+      label: key.replaceAll('_', ' '),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: DropdownButton<T>(
+          key: Key('${key}_dropdown_button'),
+          value: value,
+          items: map.entries.map((entry) {
+            return DropdownMenuItem<T>(
+              key: Key('${key}_dropdown_menu_item_${entry.key}'),
+              value: entry.key,
+              child: Text(entry.value.toString()),
+            );
+          }).toList(),
+          onChanged: (T? value) {
+            if (value == null) {
+              return;
+            }
+            setState(() {
+              onChanged(value);
+            });
+          },
+        ),
       ),
     );
   }
@@ -338,7 +381,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        const Text('Every'),
+        Text(_labels.every),
         _dropdownButtonFromMap<int, String>(
           'seconds_every_second',
           _cronExpression.second.getEverySecondMap(),
@@ -350,7 +393,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
             );
           },
         ),
-        const Text('second(s)'),
+        Text(_labels.secondUnit),
       ],
     );
   }
@@ -359,7 +402,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        const Text('Every'),
+        Text(_labels.every),
         _dropdownButtonFromMap<int, String>(
           'minutes_every_minute',
           _cronExpression.minute.getEveryMinuteMap(),
@@ -371,7 +414,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
             );
           },
         ),
-        const Text('minute(s)'),
+        Text(_labels.minuteUnit),
       ],
     );
   }
@@ -380,7 +423,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        const Text('Every'),
+        Text(_labels.every),
         _dropdownButtonFromMap<int, String>(
           'hourly_every_hour',
           _cronExpression.hour.getHourMap(),
@@ -392,7 +435,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
             );
           },
         ),
-        const Text('hour(s) on minute'),
+        Text(_labels.hoursOnMinute),
         _dropdownButtonFromMap<int, String>(
           'hourly_specific_minutes',
           _cronExpression.minute.getMinuteMap(),
@@ -409,7 +452,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        const Text('Every'),
+        Text(_labels.every),
         _dropdownButtonFromMap<int, String>(
           'daily_every_day',
           _cronExpression.dayOfMonth.getDayMap(),
@@ -421,7 +464,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
             );
           },
         ),
-        const Text('day(s) at'),
+        Text(_labels.daysAt),
         _dropdownButtonFromMap<int, String>(
           'daily_specific_hours',
           _cronExpression.hour.getHourMap(),
@@ -459,7 +502,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
         Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            const Text('Start time'),
+            Text(_labels.startTime),
             _dropdownButtonFromMap<int, String>(
               'weekly_specific_hours',
               _cronExpression.hour.getHourMap(),
@@ -486,7 +529,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        const Text('On the'),
+        Text(_labels.onThe),
         _dropdownButtonFromMap<int, String>(
           'monthly_xth_weeks',
           _cronExpression.dayOfWeek.getWeeksMap(),
@@ -509,7 +552,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
             );
           },
         ),
-        const Text('of every'),
+        Text(_labels.ofEvery),
         _dropdownButtonFromMap<int, String>(
           'monthly_every_month',
           _cronExpression.month.getMonthMap(),
@@ -521,7 +564,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
             );
           },
         ),
-        const Text('at'),
+        Text(_labels.at),
         _dropdownButtonFromMap<int, String>(
           'monthly_specific_hours',
           _cronExpression.hour.getHourMap(),
@@ -546,7 +589,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        const Text('On the'),
+        Text(_labels.onThe),
         _dropdownButtonFromMap<int, String>(
           'yearly_xth_weeks',
           _cronExpression.dayOfWeek.getWeeksMap(),
@@ -569,7 +612,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
             );
           },
         ),
-        const Text('of'),
+        Text(_labels.of),
         _dropdownButtonFromMap<int, String>(
           'yearly_specific_month',
           _cronExpression.month.getMonthMap(),
@@ -578,7 +621,7 @@ class CronPickerDialogState extends State<CronPickerDialog> {
             _cronExpression.month.setSpecificMonths([value]);
           },
         ),
-        const Text('at'),
+        Text(_labels.at),
         _dropdownButtonFromMap<int, String>(
           'yearly_specific_hours',
           _cronExpression.hour.getHourMap(),
@@ -593,6 +636,39 @@ class CronPickerDialogState extends State<CronPickerDialog> {
           _cronExpression.minute.specificMinutes[0],
           (value) {
             _cronExpression.minute.setSpecificMinutes([value]);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _yearPanel() {
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        Text(_labels.every),
+        _dropdownButtonFromMap<int, String>(
+          'year_every_year',
+          _cronExpression.year.getEveryYearMap(),
+          _cronExpression.year.everyYear ?? 1,
+          (value) {
+            _cronExpression.year.setEveryYearStartAt(
+              value,
+              _cronExpression.year.everyStartYear,
+            );
+          },
+        ),
+        Text(_labels.yearsStartingIn),
+        _dropdownButtonFromMap<int, String>(
+          'year_start_year',
+          _cronExpression.year.getYearMap(),
+          _cronExpression.year.everyStartYear ??
+              _cronExpression.year.startIndex,
+          (value) {
+            _cronExpression.year.setEveryYearStartAt(
+              _cronExpression.year.everyYear ?? 1,
+              value,
+            );
           },
         ),
       ],

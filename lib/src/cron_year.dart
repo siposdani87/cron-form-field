@@ -145,6 +145,16 @@ class CronYear implements CronPart {
         .hasMatch(part);
   }
 
+  Map<int, String> getEveryYearMap() {
+    return {for (var i = 1; i <= 10; i++) i: i.toString()};
+  }
+
+  Map<int, String> getYearMap() {
+    return {
+      for (var i = currentYear; i <= currentYear + 20; i++) i: i.toString()
+    };
+  }
+
   @override
   int get startIndex {
     return currentYear;

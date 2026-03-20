@@ -22,25 +22,25 @@ export 'package:cron_form_field/src/enums/cron_expression_type.dart';
 /// ```
 class CronExpression {
   /// The seconds part (Quartz only, empty for Standard).
-  CronSecond second;
+  final CronSecond second;
 
   /// The minutes part (0-59).
-  CronMinute minute;
+  final CronMinute minute;
 
   /// The hours part (0-23).
-  CronHour hour;
+  final CronHour hour;
 
-  CronDay _day;
+  final CronDay _day;
 
   /// The month part (1-12 or JAN-DEC).
-  CronMonth month;
+  final CronMonth month;
 
   /// The year part (Quartz only, empty for Standard).
-  CronYear year;
+  final CronYear year;
 
   /// Whether this is a [CronExpressionType.standard] or
   /// [CronExpressionType.quartz] expression.
-  CronExpressionType type;
+  final CronExpressionType type;
 
   CronExpression(
     this.second,
