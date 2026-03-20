@@ -75,18 +75,19 @@
 
 ### Short-term
 
-- **Replace `flutter_lints`** with `lints: ^4.0.0` — `flutter_lints` is deprecated (stuck at 2.0.1)
-- **Pin `test` dependency** — currently `test: any`, pin for reproducible builds
+- ✅ **Upgraded `flutter_lints`** from 2.0.1 to `^6.0.0`, fixed 9 new lint issues (super parameters, unnecessary library name)
+- ✅ **Pinned `test` dependency** to `^1.26.0`
+- ✅ **Updated CLAUDE.md** to reflect current SDK constraints, architecture, and conventions
 - **Set up branch protection** on `master` requiring CI to pass
 
 ### Medium-term
 
-- **5.3 Make `CronExpression` fields private** — requires reworking the dialog to use methods instead of direct field mutation
-- **Localization support** — panel labels ("Minutes", "Hourly", etc.) and button text are hardcoded in English
-- **Add `CronYear` panel** to the dialog for Quartz expressions (like the Seconds panel)
+- ✅ **5.3 Made `CronExpression` fields `final`** — prevents reassignment while still allowing mutation through part methods
+- ✅ **Localization support** — added `CronPickerLabels` class with all user-facing strings; pass to `CronFormField` or `CronPickerDialog` via `labels` parameter. Deprecated `btnDoneText`/`btnCancelText`/`dialogDoneText`/`dialogCancelText` in favor of `labels`
+- ✅ **Added `CronYear` panel** to the dialog for Quartz expressions — shows "Every X year(s) starting in Y" with dropdown selectors
 
 ### Long-term
 
-- **Accessibility audit** — add more `Semantics` labels to dropdowns and checkboxes
+- ✅ **Accessibility audit** — added `Semantics` labels to all dropdown buttons with descriptive names
 - **Golden tests** — snapshot tests for the dialog UI across themes
 - **Web/desktop optimizations** — keyboard navigation within panels
