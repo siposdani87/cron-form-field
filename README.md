@@ -1,6 +1,6 @@
 # cron_form_field
 
-[![pub package](https://img.shields.io/pub/v/cron_form_field.svg)](https://pub.dartlang.org/packages/cron_form_field)
+[![pub package](https://img.shields.io/pub/v/cron_form_field.svg)](https://pub.dev/packages/cron_form_field)
 
 <a href="https://www.buymeacoffee.com/siposdani87" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me A Coffee" width="150" height="39" /></a>
 
