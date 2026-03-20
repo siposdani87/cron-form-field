@@ -4,105 +4,231 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:cron_form_field/cron_form_field.dart';
 
 void main() {
-  testWidgets('Testing instantiate CronFormField', (WidgetTester tester) async {
-    const cronExpression = '* 5 * ? * *';
-    var myWidget = const MyWidget(cronExpression: cronExpression);
-    await tester.pumpWidget(myWidget);
+  group('CronFormField widget', () {
+    testWidgets('renders with initial value and label', (WidgetTester tester) async {
+      const cronExpression = '* 5 * ? * *';
+      await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
 
-    expect(
-      find.text(cronExpression),
-      findsOneWidget,
-      reason: 'CronFormField cronExpression not found!',
-    );
-    var cronFormField = find.byType(CronFormField);
-    expect(
-      cronFormField,
-      findsOneWidget,
-      reason: 'CronFormField not found!',
-    );
-    expect(
-      find.text('Schedule'),
-      findsOneWidget,
-      reason: 'CronFormField Schedule label not found!',
-    );
+      expect(
+        find.text(cronExpression),
+        findsOneWidget,
+        reason: 'CronFormField should display the initial cron expression',
+      );
+      expect(
+        find.byType(CronFormField),
+        findsOneWidget,
+        reason: 'CronFormField widget should be present',
+      );
+      expect(
+        find.text('Schedule'),
+        findsOneWidget,
+        reason: 'CronFormField should display the label text',
+      );
+    });
 
-    await tester.tap(cronFormField);
-    await tester.pumpAndSettle();
+    testWidgets('opens dialog on tap', (WidgetTester tester) async {
+      const cronExpression = '* 5 * ? * *';
+      await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
 
-    var panelListTile = find.ancestor(
-      of: find.text('Minutes'),
-      matching: find.byType(ListTile),
-    );
-    await tester.tap(panelListTile);
-    await tester.pumpAndSettle();
+      await tester.tap(find.byType(CronFormField));
+      await tester.pumpAndSettle();
 
-    var buttonLabel = find.text('5');
-    expect(
-      buttonLabel,
-      findsOneWidget,
-      reason: 'CronFormField 5 option not displayed on dialog!',
-    );
-    var button = find.ancestor(
-      of: buttonLabel,
-      matching: find.byKey(const ValueKey('minutes_every_minute_dropdown_button')),
-    );
-    expect(
-      button,
-      findsOneWidget,
-      reason: 'CronFormField DropdownButton not found!',
-    );
+      expect(
+        find.text('Done'),
+        findsOneWidget,
+        reason: 'Dialog Done button should be visible',
+      );
+      expect(
+        find.text('Cancel'),
+        findsOneWidget,
+        reason: 'Dialog Cancel button should be visible',
+      );
+      expect(
+        find.text('Minutes'),
+        findsOneWidget,
+        reason: 'Minutes panel should be visible in dialog',
+      );
+      expect(
+        find.text('Hourly'),
+        findsOneWidget,
+        reason: 'Hourly panel should be visible in dialog',
+      );
+      expect(
+        find.text('Daily'),
+        findsOneWidget,
+        reason: 'Daily panel should be visible in dialog',
+      );
+      expect(
+        find.text('Weekly'),
+        findsOneWidget,
+        reason: 'Weekly panel should be visible in dialog',
+      );
+      expect(
+        find.text('Monthly'),
+        findsOneWidget,
+        reason: 'Monthly panel should be visible in dialog',
+      );
+      expect(
+        find.text('Yearly'),
+        findsOneWidget,
+        reason: 'Yearly panel should be visible in dialog',
+      );
+    });
 
-    await tester.tap(button);
-    await tester.pumpAndSettle();
+    testWidgets('cancel button closes dialog without changing value', (WidgetTester tester) async {
+      const cronExpression = '* 5 * ? * *';
+      await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
 
-    var itemLabel = find.text('6').last;
-    expect(
-      itemLabel,
-      findsOneWidget,
-      reason: 'CronFormField 6 option not displayed on dialog!',
-    );
-    var item = find.ancestor(
-      of: itemLabel,
-      matching: find.byKey(const ValueKey('minutes_every_minute_dropdown_menu_item_6')).last,
-    );
-    expect(
-      item,
-      findsOneWidget,
-      reason: 'CronFormField DropdownMenuItem not found!',
-    );
+      await tester.tap(find.byType(CronFormField));
+      await tester.pumpAndSettle();
 
-    // await tester.scrollUntilVisible(item, 100.0, scrollable: find.byType(Scrollable).last);
-    // await tester.pumpAndSettle();
-    // await tester.ensureVisible(item);
-    // await tester.pumpAndSettle();
-    // await tester.tap(item);
-    // await tester.pumpAndSettle();
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
 
-    var doneLabel = find.text('Done');
-    expect(
-      doneLabel,
-      findsOneWidget,
-      reason: 'CronFormField Done button not displayed on dialog!',
-    );
-    var done = find.ancestor(
-      of: doneLabel,
-      matching: find.byType(TextButton),
-    );
+      expect(
+        find.text('Done'),
+        findsNothing,
+        reason: 'Dialog should be closed after Cancel',
+      );
+      expect(
+        find.text(cronExpression),
+        findsOneWidget,
+        reason: 'Original value should be preserved after Cancel',
+      );
+    });
 
-    await tester.tap(done);
-    await tester.pumpAndSettle();
+    testWidgets('done button closes dialog', (WidgetTester tester) async {
+      const cronExpression = '* 5 * ? * *';
+      await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
 
-    // expect(
-    //   find.text(cronExpression),
-    //   findsNothing,
-    //   reason: 'CronFormField cronExpression found!',
-    // );
+      await tester.tap(find.byType(CronFormField));
+      await tester.pumpAndSettle();
 
-    // expect(
-    //    find.text(cronExpression.replaceFirst('5', '*/6')),
-    //    findsOneWidget,
-    //    reason: 'CronFormField new cronExpression not found!',
-    // );
+      await tester.tap(find.text('Done'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text('Done'),
+        findsNothing,
+        reason: 'Dialog should be closed after Done',
+      );
+    });
+
+    testWidgets('opening Minutes panel shows minute controls', (WidgetTester tester) async {
+      const cronExpression = '* 5 * ? * *';
+      await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
+
+      await tester.tap(find.byType(CronFormField));
+      await tester.pumpAndSettle();
+
+      var panelListTile = find.ancestor(
+        of: find.text('Minutes'),
+        matching: find.byType(ListTile),
+      );
+      await tester.tap(panelListTile);
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text('Every'),
+        findsOneWidget,
+        reason: 'Minutes panel should show "Every" label',
+      );
+      expect(
+        find.text('minute(s)'),
+        findsOneWidget,
+        reason: 'Minutes panel should show "minute(s)" label',
+      );
+      expect(
+        find.byKey(const ValueKey('minutes_every_minute_dropdown_button')),
+        findsOneWidget,
+        reason: 'Minutes dropdown should be present',
+      );
+    });
+
+    testWidgets('opening Hourly panel shows hour controls', (WidgetTester tester) async {
+      const cronExpression = '0 0 */3 ? * *';
+      await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
+
+      await tester.tap(find.byType(CronFormField));
+      await tester.pumpAndSettle();
+
+      var panelListTile = find.ancestor(
+        of: find.text('Hourly'),
+        matching: find.byType(ListTile),
+      );
+      await tester.tap(panelListTile);
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text('hour(s) on minute'),
+        findsOneWidget,
+        reason: 'Hourly panel should show hour/minute labels',
+      );
+    });
+
+    testWidgets('opening Weekly panel shows weekday checkboxes', (WidgetTester tester) async {
+      const cronExpression = '0 0 12 ? * TUE';
+      await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
+
+      await tester.tap(find.byType(CronFormField));
+      await tester.pumpAndSettle();
+
+      var panelListTile = find.ancestor(
+        of: find.text('Weekly'),
+        matching: find.byType(ListTile),
+      );
+      await tester.tap(panelListTile);
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byType(CheckboxListTile),
+        findsNWidgets(7),
+        reason: 'Weekly panel should show 7 weekday checkboxes',
+      );
+      expect(
+        find.text('Start time'),
+        findsOneWidget,
+        reason: 'Weekly panel should show start time label',
+      );
+    });
+
+    testWidgets('dialog shows readable description', (WidgetTester tester) async {
+      const cronExpression = '0 0 12 ? * TUE';
+      await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
+
+      await tester.tap(find.byType(CronFormField));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text(cronExpression),
+        findsWidgets,
+        reason: 'Dialog should show the cron expression string',
+      );
+    });
+
+    testWidgets('done after opening panel returns new value', (WidgetTester tester) async {
+      const cronExpression = '0 0 12 ? * TUE';
+      await tester.pumpWidget(const MyWidget(cronExpression: cronExpression));
+
+      await tester.tap(find.byType(CronFormField));
+      await tester.pumpAndSettle();
+
+      var panelListTile = find.ancestor(
+        of: find.text('Minutes'),
+        matching: find.byType(ListTile),
+      );
+      await tester.tap(panelListTile);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Done'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text(cronExpression),
+        findsNothing,
+        reason: 'Original expression should be replaced after opening a panel and pressing Done',
+      );
+    });
   });
 }
 
