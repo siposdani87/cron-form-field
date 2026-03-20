@@ -2,9 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-library cron_form_field;
+library;
 
 import 'package:cron_form_field/cron_expression.dart';
+import 'package:cron_form_field/src/cron_picker_labels.dart';
 import 'package:cron_form_field/src/enums/cron_expression_output_format.dart';
 import 'package:flutter/material.dart';
 import 'package:cron_form_field/src/cron_picker_dialog.dart';
@@ -12,6 +13,7 @@ import 'package:cron_form_field/src/cron_picker_dialog.dart';
 export 'package:cron_form_field/src/enums/cron_expression_output_format.dart';
 export 'package:cron_form_field/src/cron_picker_dialog.dart'
     show CronPickerDialog;
+export 'package:cron_form_field/src/cron_picker_labels.dart';
 
 /// A form field for editing cron expressions via a picker dialog.
 ///
@@ -68,13 +70,18 @@ class CronFormField extends FormField<String> {
   final String? dialogTitle;
 
   /// The done button text on dialog.
-  final String dialogDoneText;
+  @Deprecated('Use labels.done instead')
+  final String? dialogDoneText;
 
   /// The cancel button text on dialog.
-  final String dialogCancelText;
+  @Deprecated('Use labels.cancel instead')
+  final String? dialogCancelText;
 
   /// The output format for the cron expression.
   final CronExpressionOutputFormat outputFormat;
+
+  /// Labels for the picker dialog. Override to localize.
+  final CronPickerLabels labels;
 
   /// Called when the string value changes.
   final ValueChanged<String>? onChanged;
@@ -90,18 +97,19 @@ class CronFormField extends FormField<String> {
   /// will be constructed automatically and its `text` will be initialized
   /// to [initialValue] or the empty string.
   CronFormField({
-    Key? key,
+    super.key,
     this.controller,
     this.decoration,
     this.icon,
     this.labelText,
     this.hintText,
     this.dialogTitle,
-    this.dialogCancelText = 'Cancel',
-    this.dialogDoneText = 'Done',
+    @Deprecated('Use labels.cancel instead') this.dialogCancelText,
+    @Deprecated('Use labels.done instead') this.dialogDoneText,
     this.onChanged,
     this.onCronExpressionChanged,
     this.outputFormat = CronExpressionOutputFormat.auto,
+    this.labels = const CronPickerLabels(),
     String? initialValue,
     FocusNode? focusNode,
     TextStyle? style,
@@ -109,19 +117,14 @@ class CronFormField extends FormField<String> {
     TextAlignVertical? textAlignVertical,
     bool autofocus = false,
     bool readOnly = false,
-    FormFieldSetter<String>? onSaved,
-    FormFieldValidator<String>? validator,
-    AutovalidateMode? autovalidateMode,
-    bool enabled = true,
+    super.onSaved,
+    super.validator,
+    super.autovalidateMode,
+    super.enabled = true,
   })  : assert(initialValue == null || controller == null),
         super(
-          key: key,
           initialValue:
               controller != null ? controller.text : (initialValue ?? ''),
-          onSaved: onSaved,
-          validator: validator,
-          autovalidateMode: autovalidateMode,
-          enabled: enabled,
           builder: (FormFieldState<String> formFieldState) {
             final CronFormFieldState state =
                 formFieldState as CronFormFieldState;
@@ -214,9 +217,12 @@ class CronFormFieldState extends FormFieldState<String> {
       context: context,
       value: _controller.text,
       title: widget.dialogTitle ?? widget.labelText,
+      // ignore: deprecated_member_use_from_same_package
       btnDoneText: widget.dialogDoneText,
+      // ignore: deprecated_member_use_from_same_package
       btnCancelText: widget.dialogCancelText,
       outputFormat: widget.outputFormat,
+      labels: widget.labels,
     );
     if (newValue != null) {
       _controller.text = newValue;
