@@ -15,17 +15,16 @@
 - ✅ **2.5** Changed `outputFormat` from nullable to non-nullable
 - ✅ **2.6** Fixed duplicate `'monthly_*'` widget keys in yearly panel → `'yearly_*'`
 
-## Phase 3 — pub.dev Score & Documentation ✅ PARTIALLY DONE
+## Phase 3 — pub.dev Score & Documentation ✅ DONE
 
 - ✅ Added `topics`, `screenshots`, `repository`, `issue_tracker` to `pubspec.yaml`
 - ✅ Fixed README badge URL to `pub.dev`
-- Add `///` doc comments to all public APIs
-- Fix deprecated API references in dartpad doc comments
+- ✅ Added `///` doc comments to `CronExpression`, `CronPart`, `CronPickerDialog`, `CronFormField`, and enum types
 
-## Phase 4 — Testing ✅ MOSTLY DONE
+## Phase 4 — Testing ✅ DONE
 
 - ✅ **Unit tests expanded** from 27 to 74 tests covering: `toReadableString()`, output formats, mutation methods, `reset()`, malformed input, expression type detection, OCT fix, off-by-one fix, DayOfMonth.getType fix
-- **Widget test** has commented-out assertions — needs tests for each panel and Cancel button
+- ✅ **Widget tests rewritten** with 8 tests: render, dialog open, Cancel, Done, Minutes panel, Hourly panel, Weekly panel (7 checkboxes), readable description, panel-then-Done value change
 - ✅ **CI workflow added** (`ci.yml`) with `flutter analyze` + `flutter test` + `dart format` check
 
 ## Phase 5 — Architecture ✅ MOSTLY DONE
@@ -66,8 +65,8 @@
 |-------|--------|--------|--------|
 | 1 — Dart 3 compat | Small | **Highest** | ✅ Done |
 | 2 — Bug fixes | Small | High | ✅ Done |
-| 3 — pub.dev score | Small | Medium | Partial |
+| 3 — pub.dev score | Small | Medium | ✅ Done |
 | 7 — CI/CD | Small | Low-medium | ✅ Done |
-| 4 — Testing | Medium | Medium | ✅ Mostly done (74 unit tests) |
+| 4 — Testing | Medium | Medium | ✅ Done (74 unit + 8 widget) |
 | 5 — Architecture | Large | Medium | ✅ Mostly done |
 | 6 — API/UX | Large | Medium | ✅ Partially done |
