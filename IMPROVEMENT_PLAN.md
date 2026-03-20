@@ -36,7 +36,7 @@
 - ✅ **5.1** Extracted `CronTimePart` base class — `CronSecond`, `CronMinute`, `CronHour` are now thin subclasses (~30 lines each vs ~150 before). Deleted unused `CronSecondType`, `CronMinuteType`, `CronHourType` enums.
 - **5.3** Deferred: Making `CronExpression` fields private requires reworking the dialog's mutation pattern
 
-## Phase 6 — API & UX Enhancements ✅ PARTIALLY DONE
+## Phase 6 — API & UX Enhancements ✅ DONE
 
 - ✅ Added static `CronPickerDialog.show()` for standalone use without the form field
 - ✅ Exported `CronPickerDialog` from the main library
@@ -48,9 +48,9 @@
 - ✅ Made `PanelType` enum private (`_PanelType`) — implementation detail
 - ✅ Added `onCronExpressionChanged` callback exposing parsed `CronExpression` object
 - ✅ Made `decoration` a proper named field with doc comments clarifying the fallback behavior
-- Panel state preservation — `reset()` wipes config when switching panels (future)
-- Add missing Seconds panel to dialog UI (future)
-- Replace custom panels with `ExpansionTile` for Material 3 theming (future)
+- ✅ Panel state preservation — `reset()` only called when opening a *new* panel, not when collapsing current one
+- ✅ Added Seconds panel for Quartz expressions (conditionally shown)
+- ✅ Replaced custom expandable panels with `ExpansionTile` for Material 3 theming
 
 ## Phase 7 — CI/CD Modernization ✅ DONE
 
@@ -69,4 +69,4 @@
 | 7 — CI/CD | Small | Low-medium | ✅ Done |
 | 4 — Testing | Medium | Medium | ✅ Done (74 unit + 8 widget) |
 | 5 — Architecture | Large | Medium | ✅ Done |
-| 6 — API/UX | Large | Medium | ✅ Mostly done |
+| 6 — API/UX | Large | Medium | ✅ Done |
