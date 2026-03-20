@@ -1,8 +1,7 @@
-import 'package:cron_form_field/src/cron_entity.dart';
 import 'package:cron_form_field/src/cron_part.dart';
 import 'package:cron_form_field/src/enums/cron_second_type.dart';
 
-class CronSecond extends CronEntity implements CronPart {
+class CronSecond implements CronPart {
   late CronSecondType type;
   late int everySecond;
   late int? everyStartSecond;
@@ -10,7 +9,7 @@ class CronSecond extends CronEntity implements CronPart {
   late int betweenStartSecond;
   late int betweenEndSecond;
 
-  CronSecond(String? originalValue) : super(originalValue) {
+  CronSecond(String? originalValue) {
     setDefaults();
     _setValue(originalValue);
   }
@@ -27,27 +26,27 @@ class CronSecond extends CronEntity implements CronPart {
 
   @override
   void reset() {
-    type = CronSecondType.EVERY;
+    type = CronSecondType.every;
     setDefaults();
   }
 
   void setEverySecond() {
-    type = CronSecondType.EVERY;
+    type = CronSecondType.every;
   }
 
   void setEverySecondStartAt(int second, [int? startSecond]) {
-    type = CronSecondType.EVERY_START_AT;
+    type = CronSecondType.everyStartAt;
     everySecond = second;
     everyStartSecond = startSecond;
   }
 
   void setSpecificSeconds(List<int> seconds) {
-    type = CronSecondType.SPECIFIC;
+    type = CronSecondType.specific;
     specificSeconds = seconds;
   }
 
   void setBetweenSeconds(int startSecond, int endSecond) {
-    type = CronSecondType.BETWEEN;
+    type = CronSecondType.between;
     betweenStartSecond = startSecond;
     betweenEndSecond = endSecond;
   }
@@ -61,54 +60,54 @@ class CronSecond extends CronEntity implements CronPart {
       throw ArgumentError('Invalid second part of expression!');
     }
     switch (type) {
-      case CronSecondType.EVERY:
+      case CronSecondType.every:
         break;
-      case CronSecondType.EVERY_START_AT:
+      case CronSecondType.everyStartAt:
         var parts = value.split('/');
         everyStartSecond = parts[0] == '*' ? null : int.parse(parts[0]);
         everySecond = int.parse(parts[1]);
         break;
-      case CronSecondType.SPECIFIC:
+      case CronSecondType.specific:
         specificSeconds = value.split(',').map((v) => int.parse(v)).toList();
         break;
-      case CronSecondType.BETWEEN:
+      case CronSecondType.between:
         var parts = value.split('-');
         betweenStartSecond = int.parse(parts[0]);
         betweenEndSecond = int.parse(parts[1]);
         break;
-      case CronSecondType.NONE:
+      case CronSecondType.none:
         break;
     }
   }
 
   CronSecondType _getType(String? value) {
     if (value == null) {
-      return CronSecondType.NONE;
+      return CronSecondType.none;
     }
     if (value.contains('/')) {
-      return CronSecondType.EVERY_START_AT;
+      return CronSecondType.everyStartAt;
     } else if (value.contains('*')) {
-      return CronSecondType.EVERY;
+      return CronSecondType.every;
     } else if (value.contains('-')) {
-      return CronSecondType.BETWEEN;
+      return CronSecondType.between;
     }
 
-    return CronSecondType.SPECIFIC;
+    return CronSecondType.specific;
   }
 
   @override
   String toString() {
     switch (type) {
-      case CronSecondType.EVERY:
+      case CronSecondType.every:
         return '*';
-      case CronSecondType.EVERY_START_AT:
+      case CronSecondType.everyStartAt:
         return '${everyStartSecond ?? '*'}/$everySecond';
-      case CronSecondType.SPECIFIC:
+      case CronSecondType.specific:
         return (specificSeconds.isEmpty ? [startIndex] : specificSeconds)
             .join(',');
-      case CronSecondType.BETWEEN:
+      case CronSecondType.between:
         return '$betweenStartSecond-$betweenEndSecond';
-      case CronSecondType.NONE:
+      case CronSecondType.none:
         return '';
     }
   }
@@ -116,28 +115,29 @@ class CronSecond extends CronEntity implements CronPart {
   @override
   String toReadableString() {
     switch (type) {
-      case CronSecondType.EVERY:
+      case CronSecondType.every:
         return 'every second';
-      case CronSecondType.EVERY_START_AT:
+      case CronSecondType.everyStartAt:
         var startSecond = everyStartSecond ?? 0;
         return startSecond > 0
             ? 'every $everySecond seconds starting at $startSecond'
             : 'every $everySecond seconds';
-      case CronSecondType.SPECIFIC:
+      case CronSecondType.specific:
         var seconds = specificSeconds.isEmpty ? [startIndex] : specificSeconds;
         return seconds.length == 1
             ? 'at second ${seconds[0]}'
-            : 'at seconds ${seconds.getRange(0, seconds.length - 2).join(', ')} and ${seconds.last}';
-      case CronSecondType.BETWEEN:
+            : 'at seconds ${seconds.getRange(0, seconds.length - 1).join(', ')} and ${seconds.last}';
+      case CronSecondType.between:
         return 'every second between $betweenStartSecond and $betweenEndSecond';
-      case CronSecondType.NONE:
+      case CronSecondType.none:
         return '';
     }
   }
 
   @override
   bool validate(String part) {
-    return true;
+    return RegExp(r'^(\*|(\*|[0-9]{1,2})/[0-9]{1,2}|[0-9]{1,2}(-[0-9]{1,2}|)(,[0-9]{1,2})*)$')
+        .hasMatch(part);
   }
 
   @override

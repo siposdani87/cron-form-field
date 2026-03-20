@@ -1,13 +1,13 @@
-enum CronExpressionOutputFormat { AUTO, ALLOWED_VALUES, ALTERNATIVE_VALUES }
+enum CronExpressionOutputFormat { auto, allowedValues, alternativeValues }
 
 extension CronExpressionOutputFormatExtension on CronExpressionOutputFormat {
   bool isAlternative(bool isAlternative) {
     switch (this) {
-      case CronExpressionOutputFormat.AUTO:
+      case CronExpressionOutputFormat.auto:
         return isAlternative;
-      case CronExpressionOutputFormat.ALLOWED_VALUES:
+      case CronExpressionOutputFormat.allowedValues:
         return false;
-      case CronExpressionOutputFormat.ALTERNATIVE_VALUES:
+      case CronExpressionOutputFormat.alternativeValues:
         return true;
     }
   }

@@ -1,1 +1,1 @@
-enum CronMinuteType { EVERY, EVERY_START_AT, SPECIFIC, BETWEEN }
+enum CronMinuteType { every, everyStartAt, specific, between }

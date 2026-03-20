@@ -1,1 +1,1 @@
-enum CronExpressionType { STANDARD, QUARTZ }
+enum CronExpressionType { standard, quartz }

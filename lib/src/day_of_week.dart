@@ -3,10 +3,10 @@ import 'package:cron_form_field/src/enums/cron_expression_type.dart';
 import 'package:cron_form_field/src/util.dart';
 import 'package:cron_form_field/src/cron_day.dart';
 import 'package:cron_form_field/src/enums/cron_day_type.dart';
-import 'package:cron_form_field/src/cron_entity.dart';
+
 import 'package:cron_form_field/src/cron_part.dart';
 
-class DayOfWeek extends CronEntity implements CronPart {
+class DayOfWeek implements CronPart {
   CronDay cronDay;
   late int everyDay;
   late int? everyStartDay;
@@ -16,7 +16,7 @@ class DayOfWeek extends CronEntity implements CronPart {
   late int? lastDay;
   bool useAlternativeValue = false;
 
-  DayOfWeek(String originalValue, this.cronDay) : super(originalValue) {
+  DayOfWeek(String originalValue, this.cronDay) {
     setDefaults();
     _setValue(originalValue);
   }
@@ -34,22 +34,22 @@ class DayOfWeek extends CronEntity implements CronPart {
 
   @override
   void reset() {
-    cronDay.type = CronDayType.EVERY_WEEK;
+    cronDay.type = CronDayType.everyWeek;
     setDefaults();
   }
 
   void setEveryWeek() {
-    cronDay.type = CronDayType.EVERY_WEEK;
+    cronDay.type = CronDayType.everyWeek;
   }
 
   void setEveryStartAtWeek(int day, [int? startDay]) {
-    cronDay.type = CronDayType.EVERY_START_AT_WEEK;
+    cronDay.type = CronDayType.everyStartAtWeek;
     everyDay = day;
     everyStartDay = startDay;
   }
 
   void setSpecificDayOfWeek(List<int> weekdays) {
-    cronDay.type = CronDayType.SPECIFIC_DAY_OF_WEEK;
+    cronDay.type = CronDayType.specificDayOfWeek;
     specificWeekdays = weekdays;
   }
 
@@ -64,13 +64,13 @@ class DayOfWeek extends CronEntity implements CronPart {
   }
 
   void setXthDayOfMonth(int weekday, int weeks) {
-    cronDay.type = CronDayType.XTH_DAY_OF_MONTH;
+    cronDay.type = CronDayType.xthDayOfMonth;
     xthWeekday = weekday;
     xthWeeks = weeks;
   }
 
   void setLastXDayOfMonth(int? day) {
-    cronDay.type = CronDayType.LAST_X_DAY_OF_MONTH;
+    cronDay.type = CronDayType.lastXDayOfMonth;
     lastDay = day;
   }
 
@@ -80,37 +80,37 @@ class DayOfWeek extends CronEntity implements CronPart {
     }
     handleAlternativeValue(value);
     switch (cronDay.type) {
-      case CronDayType.EVERY_WEEK:
+      case CronDayType.everyWeek:
         break;
-      case CronDayType.EVERY_MONTH:
+      case CronDayType.everyMonth:
         break;
-      case CronDayType.EVERY_START_AT_WEEK:
+      case CronDayType.everyStartAtWeek:
         var parts = value.split('/');
         everyStartDay = parts[0] == '*' ? null : int.parse(parts[0]);
         everyDay = int.parse(parts[1]);
         break;
-      case CronDayType.EVERY_START_AT_MONTH:
+      case CronDayType.everyStartAtMonth:
         break;
-      case CronDayType.SPECIFIC_DAY_OF_WEEK:
+      case CronDayType.specificDayOfWeek:
         specificWeekdays = value
             .split(',')
             .map((v) => parseAlternativeValue(v, getWeekdayMap()))
             .toList();
         break;
-      case CronDayType.SPECIFIC_DAY_OF_MONTH:
+      case CronDayType.specificDayOfMonth:
         break;
-      case CronDayType.LAST_DAY_OF_MONTH:
+      case CronDayType.lastDayOfMonth:
         break;
-      case CronDayType.LAST_WEEKDAY_OF_MONTH:
+      case CronDayType.lastWeekdayOfMonth:
         break;
-      case CronDayType.LAST_X_DAY_OF_MONTH:
+      case CronDayType.lastXDayOfMonth:
         lastDay = value.length == 1 ? null : int.parse(value.split('L')[0]);
         break;
-      case CronDayType.DAY_BEFORE_END_OF_MONTH:
+      case CronDayType.dayBeforeEndOfMonth:
         break;
-      case CronDayType.NEAREST_WEEKDAY_OF_MONTH:
+      case CronDayType.nearestWeekdayOfMonth:
         break;
-      case CronDayType.XTH_DAY_OF_MONTH:
+      case CronDayType.xthDayOfMonth:
         var parts = value.split('#');
         xthWeekday = parseAlternativeValue(parts[0], getWeekdayMap());
         xthWeeks = int.parse(parts[1]);
@@ -119,34 +119,34 @@ class DayOfWeek extends CronEntity implements CronPart {
 
   static CronDayType getType(String value) {
     if (value.contains('/')) {
-      return CronDayType.EVERY_START_AT_WEEK;
+      return CronDayType.everyStartAtWeek;
     } else if (value.contains('*')) {
-      return CronDayType.EVERY_WEEK;
+      return CronDayType.everyWeek;
     } else if (value.contains('#')) {
-      return CronDayType.XTH_DAY_OF_MONTH;
+      return CronDayType.xthDayOfMonth;
     } else if (value.contains('L')) {
-      return CronDayType.LAST_X_DAY_OF_MONTH;
+      return CronDayType.lastXDayOfMonth;
     }
 
-    return CronDayType.SPECIFIC_DAY_OF_WEEK;
+    return CronDayType.specificDayOfWeek;
   }
 
   @override
   String toString() {
-    return toFormatString(CronExpressionOutputFormat.AUTO);
+    return toFormatString(CronExpressionOutputFormat.auto);
   }
 
   String toFormatString(CronExpressionOutputFormat outputFormat) {
     switch (cronDay.type) {
-      case CronDayType.EVERY_WEEK:
+      case CronDayType.everyWeek:
         return '*';
-      case CronDayType.EVERY_MONTH:
+      case CronDayType.everyMonth:
         return '?';
-      case CronDayType.EVERY_START_AT_WEEK:
+      case CronDayType.everyStartAtWeek:
         return '${everyStartDay ?? '*'}/$everyDay';
-      case CronDayType.EVERY_START_AT_MONTH:
+      case CronDayType.everyStartAtMonth:
         return '?';
-      case CronDayType.SPECIFIC_DAY_OF_WEEK:
+      case CronDayType.specificDayOfWeek:
         return (specificWeekdays.isEmpty ? [startIndex] : specificWeekdays)
             .map((v) => convertAlternativeValue(
                   outputFormat.isAlternative(useAlternativeValue),
@@ -155,19 +155,19 @@ class DayOfWeek extends CronEntity implements CronPart {
                 ))
             .toList()
             .join(',');
-      case CronDayType.SPECIFIC_DAY_OF_MONTH:
+      case CronDayType.specificDayOfMonth:
         return '?';
-      case CronDayType.LAST_DAY_OF_MONTH:
+      case CronDayType.lastDayOfMonth:
         return '?';
-      case CronDayType.LAST_WEEKDAY_OF_MONTH:
+      case CronDayType.lastWeekdayOfMonth:
         return '?';
-      case CronDayType.LAST_X_DAY_OF_MONTH:
+      case CronDayType.lastXDayOfMonth:
         return '${lastDay ?? ''}L';
-      case CronDayType.DAY_BEFORE_END_OF_MONTH:
+      case CronDayType.dayBeforeEndOfMonth:
         return '?';
-      case CronDayType.NEAREST_WEEKDAY_OF_MONTH:
+      case CronDayType.nearestWeekdayOfMonth:
         return '?';
-      case CronDayType.XTH_DAY_OF_MONTH:
+      case CronDayType.xthDayOfMonth:
         return '${convertAlternativeValue(outputFormat.isAlternative(useAlternativeValue), xthWeekday, getWeekdayMap())}#$xthWeeks';
     }
   }
@@ -175,18 +175,18 @@ class DayOfWeek extends CronEntity implements CronPart {
   @override
   String toReadableString() {
     switch (cronDay.type) {
-      case CronDayType.EVERY_WEEK:
+      case CronDayType.everyWeek:
         return '';
-      case CronDayType.EVERY_MONTH:
+      case CronDayType.everyMonth:
         return '';
-      case CronDayType.EVERY_START_AT_WEEK:
+      case CronDayType.everyStartAtWeek:
         var startDay = everyStartDay ?? 0;
         return startDay > 0
             ? 'every $everyDay days starting on the $startDay'
             : 'every $everyDay days';
-      case CronDayType.EVERY_START_AT_MONTH:
+      case CronDayType.everyStartAtMonth:
         return '';
-      case CronDayType.SPECIFIC_DAY_OF_WEEK:
+      case CronDayType.specificDayOfWeek:
         var days = (specificWeekdays.isEmpty ? [startIndex] : specificWeekdays)
             .map((v) => convertAlternativeValue(
                   true,
@@ -196,27 +196,29 @@ class DayOfWeek extends CronEntity implements CronPart {
             .toList();
         return days.length == 1
             ? 'on the ${days[0]} day'
-            : 'on the ${days.getRange(0, days.length - 2).join(', ')} and ${days.last} day';
-      case CronDayType.SPECIFIC_DAY_OF_MONTH:
+            : 'on the ${days.getRange(0, days.length - 1).join(', ')} and ${days.last} day';
+      case CronDayType.specificDayOfMonth:
         return '';
-      case CronDayType.LAST_DAY_OF_MONTH:
+      case CronDayType.lastDayOfMonth:
         return '';
-      case CronDayType.LAST_WEEKDAY_OF_MONTH:
+      case CronDayType.lastWeekdayOfMonth:
         return '';
-      case CronDayType.LAST_X_DAY_OF_MONTH:
+      case CronDayType.lastXDayOfMonth:
         return 'the last ${lastDay ?? 'day'} of the month';
-      case CronDayType.DAY_BEFORE_END_OF_MONTH:
+      case CronDayType.dayBeforeEndOfMonth:
         return '';
-      case CronDayType.NEAREST_WEEKDAY_OF_MONTH:
+      case CronDayType.nearestWeekdayOfMonth:
         return '';
-      case CronDayType.XTH_DAY_OF_MONTH:
+      case CronDayType.xthDayOfMonth:
         return 'on the ${serialNumberName(xthWeeks)} ${convertAlternativeValue(true, xthWeekday, getWeekdayMap())} of the month';
     }
   }
 
   @override
   bool validate(String part) {
-    return true;
+    return RegExp(r'^(\*|\?|(\*|[0-9])/[0-9]|[0-9A-Z]{1,3}(,[0-9A-Z]{1,3})*|[0-9A-Z]{1,3}#[0-9]|[0-9]*L)$',
+        caseSensitive: false)
+        .hasMatch(part);
   }
 
   void handleAlternativeValue(String value) {
@@ -245,6 +247,6 @@ class DayOfWeek extends CronEntity implements CronPart {
 
   @override
   int get startIndex {
-    return cronDay.expressionType == CronExpressionType.STANDARD ? 0 : 1;
+    return cronDay.expressionType == CronExpressionType.standard ? 0 : 1;
   }
 }

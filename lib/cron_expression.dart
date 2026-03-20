@@ -36,8 +36,8 @@ class CronExpression {
       expressionParts = '* * ? * *'.split(' ');
     }
     var expressionType = expressionParts.contains('?')
-        ? CronExpressionType.QUARTZ
-        : CronExpressionType.STANDARD;
+        ? CronExpressionType.quartz
+        : CronExpressionType.standard;
     if (expressionParts.length == 5) {
       expressionParts.insert(0, '');
       expressionParts.add('');
@@ -86,7 +86,7 @@ class CronExpression {
 
   @override
   String toString() {
-    return toFormatString(CronExpressionOutputFormat.AUTO);
+    return toFormatString(CronExpressionOutputFormat.auto);
   }
 
   String toFormatString(CronExpressionOutputFormat outputFormat) {
@@ -101,7 +101,7 @@ class CronExpression {
     ]
         .join(' ')
         .trim()
-        .replaceFirst('?', type == CronExpressionType.STANDARD ? '*' : '?');
+        .replaceFirst('?', type == CronExpressionType.standard ? '*' : '?');
   }
 
   String toReadableString() {

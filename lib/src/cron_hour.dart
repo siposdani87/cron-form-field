@@ -1,9 +1,9 @@
 import 'package:cron_form_field/src/enums/cron_hour_type.dart';
 import 'package:cron_form_field/src/util.dart';
-import 'package:cron_form_field/src/cron_entity.dart';
+
 import 'package:cron_form_field/src/cron_part.dart';
 
-class CronHour extends CronEntity implements CronPart {
+class CronHour implements CronPart {
   late CronHourType type;
   late int everyHour;
   late int? everyStartHour;
@@ -11,7 +11,7 @@ class CronHour extends CronEntity implements CronPart {
   late int betweenStartHour;
   late int betweenEndHour;
 
-  CronHour(String originalValue) : super(originalValue) {
+  CronHour(String originalValue) {
     setDefaults();
     _setValue(originalValue);
   }
@@ -28,27 +28,27 @@ class CronHour extends CronEntity implements CronPart {
 
   @override
   void reset() {
-    type = CronHourType.EVERY;
+    type = CronHourType.every;
     setDefaults();
   }
 
   void setEveryHour() {
-    type = CronHourType.EVERY;
+    type = CronHourType.every;
   }
 
   void setEveryHourStartAt(int hour, [int? startHour]) {
-    type = CronHourType.EVERY_START_AT;
+    type = CronHourType.everyStartAt;
     everyHour = hour;
     everyStartHour = startHour;
   }
 
   void setSpecificHours(List<int> hours) {
-    type = CronHourType.SPECIFIC;
+    type = CronHourType.specific;
     specificHours = hours;
   }
 
   void setBetweenHours(int startHour, int endHour) {
-    type = CronHourType.BETWEEN;
+    type = CronHourType.between;
     betweenStartHour = startHour;
     betweenEndHour = endHour;
   }
@@ -59,17 +59,17 @@ class CronHour extends CronEntity implements CronPart {
     }
     type = _getType(value);
     switch (type) {
-      case CronHourType.EVERY:
+      case CronHourType.every:
         break;
-      case CronHourType.EVERY_START_AT:
+      case CronHourType.everyStartAt:
         var parts = value.split('/');
         everyStartHour = parts[0] == '*' ? null : int.parse(parts[0]);
         everyHour = int.parse(parts[1]);
         break;
-      case CronHourType.SPECIFIC:
+      case CronHourType.specific:
         specificHours = value.split(',').map((v) => int.parse(v)).toList();
         break;
-      case CronHourType.BETWEEN:
+      case CronHourType.between:
         var parts = value.split('-');
         betweenStartHour = int.parse(parts[0]);
         betweenEndHour = int.parse(parts[1]);
@@ -79,26 +79,26 @@ class CronHour extends CronEntity implements CronPart {
 
   CronHourType _getType(String value) {
     if (value.contains('/')) {
-      return CronHourType.EVERY_START_AT;
+      return CronHourType.everyStartAt;
     } else if (value.contains('*')) {
-      return CronHourType.EVERY;
+      return CronHourType.every;
     } else if (value.contains('-')) {
-      return CronHourType.BETWEEN;
+      return CronHourType.between;
     }
 
-    return CronHourType.SPECIFIC;
+    return CronHourType.specific;
   }
 
   @override
   String toString() {
     switch (type) {
-      case CronHourType.EVERY:
+      case CronHourType.every:
         return '*';
-      case CronHourType.EVERY_START_AT:
+      case CronHourType.everyStartAt:
         return '${everyStartHour ?? '*'}/$everyHour';
-      case CronHourType.SPECIFIC:
+      case CronHourType.specific:
         return (specificHours.isEmpty ? [startIndex] : specificHours).join(',');
-      case CronHourType.BETWEEN:
+      case CronHourType.between:
         return '$betweenStartHour-$betweenEndHour';
     }
   }
@@ -106,26 +106,27 @@ class CronHour extends CronEntity implements CronPart {
   @override
   String toReadableString() {
     switch (type) {
-      case CronHourType.EVERY:
+      case CronHourType.every:
         return 'every hour';
-      case CronHourType.EVERY_START_AT:
+      case CronHourType.everyStartAt:
         var startHour = everyStartHour ?? 0;
         return startHour > 0
             ? 'every $everyHour hours starting at $startHour'
             : 'every $everyHour hours';
-      case CronHourType.SPECIFIC:
+      case CronHourType.specific:
         var hours = specificHours.isEmpty ? [startIndex] : specificHours;
         return hours.length == 1
             ? 'at hour ${hours[0]}'
-            : 'at hours ${hours.getRange(0, hours.length - 2).join(', ')} and ${hours.last}';
-      case CronHourType.BETWEEN:
+            : 'at hours ${hours.getRange(0, hours.length - 1).join(', ')} and ${hours.last}';
+      case CronHourType.between:
         return 'every hour between $betweenStartHour and $betweenEndHour';
     }
   }
 
   @override
   bool validate(String part) {
-    return true;
+    return RegExp(r'^(\*|(\*|[0-9]{1,2})/[0-9]{1,2}|[0-9]{1,2}(-[0-9]{1,2}|)(,[0-9]{1,2})*)$')
+        .hasMatch(part);
   }
 
   Map<int, String> getHourMap() {

@@ -1,1 +1,1 @@
-enum CronYearType { NONE, EVERY, EVERY_START_AT, SPECIFIC, BETWEEN }
+enum CronYearType { none, every, everyStartAt, specific, between }
