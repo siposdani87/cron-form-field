@@ -1,8 +1,7 @@
-import 'package:cron_form_field/src/cron_entity.dart';
 import 'package:cron_form_field/src/cron_part.dart';
 import 'package:cron_form_field/src/enums/cron_year_type.dart';
 
-class CronYear extends CronEntity implements CronPart {
+class CronYear implements CronPart {
   late CronYearType type;
   late int? everyYear;
   late int? everyStartYear;
@@ -11,7 +10,7 @@ class CronYear extends CronEntity implements CronPart {
   late int betweenEndYear;
   late int currentYear;
 
-  CronYear(String? originalValue) : super(originalValue) {
+  CronYear(String? originalValue) {
     currentYear = DateTime.now().year;
     setDefaults();
     _setValue(originalValue);
@@ -29,27 +28,27 @@ class CronYear extends CronEntity implements CronPart {
 
   @override
   void reset() {
-    type = CronYearType.EVERY;
+    type = CronYearType.every;
     setDefaults();
   }
 
   void setEveryYear() {
-    type = CronYearType.EVERY;
+    type = CronYearType.every;
   }
 
   void setEveryYearStartAt(int? year, [int? startYear]) {
-    type = CronYearType.EVERY_START_AT;
+    type = CronYearType.everyStartAt;
     everyYear = year;
     everyStartYear = startYear;
   }
 
   void setSpecificYears(List<int> years) {
-    type = CronYearType.SPECIFIC;
+    type = CronYearType.specific;
     specificYears = years;
   }
 
   void setBetweenYears(int startYear, int endYear) {
-    type = CronYearType.BETWEEN;
+    type = CronYearType.between;
     betweenStartYear = startYear;
     betweenEndYear = endYear;
   }
@@ -63,55 +62,55 @@ class CronYear extends CronEntity implements CronPart {
       throw ArgumentError('Invalid year part of expression!');
     }
     switch (type) {
-      case CronYearType.EVERY:
+      case CronYearType.every:
         break;
-      case CronYearType.EVERY_START_AT:
+      case CronYearType.everyStartAt:
         var parts = value.split('/');
         everyStartYear = parts[0] == '*' ? null : int.parse(parts[0]);
         everyYear = parts[1] == '*' ? null : int.parse(parts[1]);
         break;
-      case CronYearType.SPECIFIC:
+      case CronYearType.specific:
         specificYears = value.split(',').map((v) => int.parse(v)).toList();
         break;
-      case CronYearType.BETWEEN:
+      case CronYearType.between:
         var parts = value.split('-');
         betweenStartYear = int.parse(parts[0]);
         betweenEndYear = int.parse(parts[1]);
         break;
-      case CronYearType.NONE:
+      case CronYearType.none:
         break;
     }
   }
 
   CronYearType _getType(String? value) {
     if (value == null) {
-      return CronYearType.NONE;
+      return CronYearType.none;
     }
     if (value.contains('/')) {
-      return CronYearType.EVERY_START_AT;
+      return CronYearType.everyStartAt;
     } else if (value.contains('*')) {
-      return CronYearType.EVERY;
+      return CronYearType.every;
     } else if (value.contains('-')) {
-      return CronYearType.BETWEEN;
+      return CronYearType.between;
     }
 
-    return CronYearType.SPECIFIC;
+    return CronYearType.specific;
   }
 
   @override
   String toString() {
     switch (type) {
-      case CronYearType.EVERY:
+      case CronYearType.every:
         return '*';
-      case CronYearType.EVERY_START_AT:
+      case CronYearType.everyStartAt:
         return '${everyStartYear ?? '*'}/${everyYear ?? '1'}';
-      case CronYearType.SPECIFIC:
+      case CronYearType.specific:
         return specificYears.isEmpty
             ? startIndex.toString()
             : specificYears.join(',');
-      case CronYearType.BETWEEN:
+      case CronYearType.between:
         return '$betweenStartYear-$betweenEndYear';
-      case CronYearType.NONE:
+      case CronYearType.none:
         return '';
     }
   }
@@ -119,29 +118,31 @@ class CronYear extends CronEntity implements CronPart {
   @override
   String toReadableString() {
     switch (type) {
-      case CronYearType.EVERY:
+      case CronYearType.every:
         return '';
-      case CronYearType.EVERY_START_AT:
+      case CronYearType.everyStartAt:
         var year = everyYear ?? 1;
         var startYear = everyStartYear ?? startIndex;
         return year > 1
             ? 'every $year years starting in $startYear'
             : 'starting in $startYear';
-      case CronYearType.SPECIFIC:
+      case CronYearType.specific:
         var years = specificYears.isEmpty ? [startIndex] : specificYears;
         return years.length == 1
             ? 'in ${years[0]}'
-            : 'in ${years.getRange(0, years.length - 2).join(', ')} and ${years.last}';
-      case CronYearType.BETWEEN:
+            : 'in ${years.getRange(0, years.length - 1).join(', ')} and ${years.last}';
+      case CronYearType.between:
         return 'between $betweenStartYear and $betweenEndYear';
-      case CronYearType.NONE:
+      case CronYearType.none:
         return '';
     }
   }
 
   @override
   bool validate(String part) {
-    return true;
+    return RegExp(
+            r'^(\*|(\*|[0-9]{4})/([0-9]{1,4}|\*)|[0-9]{4}(-[0-9]{4}|)(,[0-9]{4})*)$')
+        .hasMatch(part);
   }
 
   @override

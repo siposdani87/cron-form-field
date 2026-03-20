@@ -28,7 +28,7 @@ class CronDay implements CronPart {
 
   @override
   void reset() {
-    type = CronDayType.EVERY_MONTH;
+    type = CronDayType.everyMonth;
     setDefaults();
     dayOfMonth.setDefaults();
     dayOfWeek.setDefaults();
@@ -42,8 +42,8 @@ class CronDay implements CronPart {
 
   bool isDayOfMonth(String value) {
     return (!value.contains('?') &&
-            expressionType == CronExpressionType.QUARTZ) ||
-        !value.contains('*') && expressionType == CronExpressionType.STANDARD;
+            expressionType == CronExpressionType.quartz) ||
+        !value.contains('*') && expressionType == CronExpressionType.standard;
   }
 
   CronDayType _getType(String dayOfMonthValue, String dayOfWeekValue) {

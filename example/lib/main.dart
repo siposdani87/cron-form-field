@@ -21,10 +21,10 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  MyHomePageState createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends State<MyHomePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController? _controller;
   String _valueChanged = '';
@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   return null;
                 },
                 onSaved: (val) => setState(() => _valueSaved = val ?? ''),
-                // outputFormat: CronExpressionOutputFormat.AUTO,
+                // outputFormat: CronExpressionOutputFormat.auto,
               ),
               const SizedBox(height: 30),
               const Text(

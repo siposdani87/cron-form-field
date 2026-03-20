@@ -1,1 +1,1 @@
-enum CronMonthType { EVERY, EVERY_START_AT, SPECIFIC, BETWEEN }
+enum CronMonthType { every, everyStartAt, specific, between }
