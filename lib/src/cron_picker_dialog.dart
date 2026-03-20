@@ -55,11 +55,13 @@ class CronPickerDialog extends StatefulWidget {
   CronPickerDialogState createState() => CronPickerDialogState();
 }
 
-enum _PanelType { none, minutes, hourly, daily, weekly, monthly, yearly }
+enum _PanelType { none, seconds, minutes, hourly, daily, weekly, monthly, yearly }
 
 class CronPickerDialogState extends State<CronPickerDialog> {
   late CronExpression _cronExpression;
   _PanelType _opened = _PanelType.none;
+
+  bool get _isQuartz => _cronExpression.type == CronExpressionType.quartz;
 
   @override
   void initState() {
@@ -68,10 +70,21 @@ class CronPickerDialogState extends State<CronPickerDialog> {
     _cronExpression = CronExpression.fromString(widget.value);
   }
 
+  void _openPanel(_PanelType panelType, void Function() setupDefaults) {
+    setState(() {
+      if (_opened == panelType) {
+        _opened = _PanelType.none;
+      } else {
+        setupDefaults();
+        _opened = panelType;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: _dialogTitle(),
+      title: Text(widget.title ?? ''),
       content: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 400),
         child: SingleChildScrollView(
@@ -80,8 +93,20 @@ class CronPickerDialogState extends State<CronPickerDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _cronExpressionText(),
-              _expansionPanel(
-                labelText: 'Minutes',
+              if (_isQuartz)
+                _buildExpansionTile(
+                  key: 'seconds',
+                  title: 'Seconds',
+                  panelType: _PanelType.seconds,
+                  child: _secondsPanel(),
+                  onOpen: () {
+                    _cronExpression.reset();
+                    _cronExpression.second.setEverySecondStartAt(1);
+                  },
+                ),
+              _buildExpansionTile(
+                key: 'minutes',
+                title: 'Minutes',
                 panelType: _PanelType.minutes,
                 child: _minutesPanel(),
                 onOpen: () {
@@ -89,8 +114,9 @@ class CronPickerDialogState extends State<CronPickerDialog> {
                   _cronExpression.minute.setEveryMinuteStartAt(1);
                 },
               ),
-              _expansionPanel(
-                labelText: 'Hourly',
+              _buildExpansionTile(
+                key: 'hourly',
+                title: 'Hourly',
                 panelType: _PanelType.hourly,
                 child: _hourlyPanel(),
                 onOpen: () {
@@ -103,8 +129,9 @@ class CronPickerDialogState extends State<CronPickerDialog> {
                   _cronExpression.dayOfMonth.setEveryStartAtMonth(1, 1);
                 },
               ),
-              _expansionPanel(
-                labelText: 'Daily',
+              _buildExpansionTile(
+                key: 'daily',
+                title: 'Daily',
                 panelType: _PanelType.daily,
                 child: _dailyPanel(),
                 onOpen: () {
@@ -118,8 +145,9 @@ class CronPickerDialogState extends State<CronPickerDialog> {
                   _cronExpression.dayOfMonth.setEveryStartAtMonth(1, 1);
                 },
               ),
-              _expansionPanel(
-                labelText: 'Weekly',
+              _buildExpansionTile(
+                key: 'weekly',
+                title: 'Weekly',
                 panelType: _PanelType.weekly,
                 child: _weeklyPanel(),
                 onOpen: () {
@@ -135,8 +163,9 @@ class CronPickerDialogState extends State<CronPickerDialog> {
                   );
                 },
               ),
-              _expansionPanel(
-                labelText: 'Monthly',
+              _buildExpansionTile(
+                key: 'monthly',
+                title: 'Monthly',
                 panelType: _PanelType.monthly,
                 child: _monthlyPanel(),
                 onOpen: () {
@@ -152,8 +181,9 @@ class CronPickerDialogState extends State<CronPickerDialog> {
                   _cronExpression.month.setEveryMonthStartAt(1);
                 },
               ),
-              _expansionPanel(
-                labelText: 'Yearly',
+              _buildExpansionTile(
+                key: 'yearly',
+                title: 'Yearly',
                 panelType: _PanelType.yearly,
                 child: _yearlyPanel(),
                 onOpen: () {
@@ -188,10 +218,6 @@ class CronPickerDialogState extends State<CronPickerDialog> {
         ),
       ],
     );
-  }
-
-  Widget _dialogTitle() {
-    return Text(widget.title ?? '');
   }
 
   Widget _cronExpressionText() {
@@ -259,59 +285,57 @@ class CronPickerDialogState extends State<CronPickerDialog> {
     );
   }
 
-  Widget _expansionPanel({
-    required String labelText,
+  Widget _buildExpansionTile({
+    required String key,
+    required String title,
     required _PanelType panelType,
     required Widget child,
-    void Function()? onOpen,
+    required void Function() onOpen,
   }) {
-    return _expandablePanel(
-      labelText: labelText,
-      opened: _opened == panelType,
-      onOpen: () {
-        if (onOpen != null) {
-          onOpen();
-        }
-        setState(() {
-          _opened = _opened == panelType ? _PanelType.none : panelType;
-        });
-      },
-      child: child,
+    final isOpen = _opened == panelType;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 4.0),
+      child: ExpansionTile(
+        key: ValueKey(key),
+        title: Text(title),
+        initiallyExpanded: isOpen,
+        onExpansionChanged: (expanded) {
+          if (expanded) {
+            _openPanel(panelType, onOpen);
+          } else {
+            setState(() {
+              _opened = _PanelType.none;
+            });
+          }
+        },
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: child,
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _expandablePanel({
-    required String labelText,
-    required bool opened,
-    required void Function() onOpen,
-    required Widget child,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
+  Widget _secondsPanel() {
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 10.0),
-          child: ListTile(
-            visualDensity: VisualDensity.compact,
-            shape: RoundedRectangleBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(4)),
-              side: BorderSide(width: 1, color: Theme.of(context).dividerColor),
-            ),
-            onTap: onOpen,
-            title: Text(labelText),
-            selected: opened,
-            trailing:
-                Icon(opened ? Icons.arrow_drop_up : Icons.arrow_drop_down),
-          ),
+        const Text('Every'),
+        _dropdownButtonFromMap<int, String>(
+          'seconds_every_second',
+          _cronExpression.second.getEverySecondMap(),
+          _cronExpression.second.everySecond,
+          (value) {
+            _cronExpression.second.setEverySecondStartAt(
+              value,
+              _cronExpression.second.everyStartSecond,
+            );
+          },
         ),
-        Visibility(
-          visible: opened,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: child,
-          ),
-        ),
+        const Text('second(s)'),
       ],
     );
   }
@@ -407,8 +431,15 @@ class CronPickerDialogState extends State<CronPickerDialog> {
     return Column(
       children: [
         ..._cronExpression.dayOfWeek.getWeekdayMap().entries.map((weekday) {
-          return _checkboxListTile(weekday.key, weekday.value);
-        }).toList(),
+          return CheckboxListTile(
+            title: Text(weekday.value),
+            value: _cronExpression.dayOfWeek.specificWeekdays.contains(weekday.key),
+            onChanged: (bool? value) {
+              _cronExpression.dayOfWeek.toggleSpecificWeekday(weekday.key);
+              setState(() {});
+            },
+          );
+        }),
         Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
@@ -549,17 +580,6 @@ class CronPickerDialogState extends State<CronPickerDialog> {
           },
         ),
       ],
-    );
-  }
-
-  Widget _checkboxListTile(int weekday, String weekdayName) {
-    return CheckboxListTile(
-      title: Text(weekdayName),
-      value: _cronExpression.dayOfWeek.specificWeekdays.contains(weekday),
-      onChanged: (bool? value) {
-        _cronExpression.dayOfWeek.toggleSpecificWeekday(weekday);
-        setState(() {});
-      },
     );
   }
 }

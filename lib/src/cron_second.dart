@@ -1,4 +1,5 @@
 import 'package:cron_form_field/src/cron_time_part.dart';
+import 'package:cron_form_field/src/util.dart';
 
 /// The seconds part of a cron expression (0-59). Optional in Standard format.
 class CronSecond extends CronTimePart {
@@ -32,4 +33,14 @@ class CronSecond extends CronTimePart {
 
   void setBetweenSeconds(int startSecond, int endSecond) =>
       setBetween(startSecond, endSecond);
+
+  Map<int, String> getEverySecondMap() {
+    return rangeListToMap(generateRangeList(1, 60));
+  }
+
+  Map<int, String> getSecondMap() {
+    return rangeListToMap(generateRangeList(0, 60), converter: (int num) {
+      return num.toString().padLeft(2, '0');
+    });
+  }
 }
